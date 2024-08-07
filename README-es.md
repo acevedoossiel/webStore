@@ -1,5 +1,5 @@
-# Web Store (template)
-README available in [Español](README-es.md)
+# Web Store (plantilla)
+README disponible en [English](README.md)
 
 ![License](https://img.shields.io/github/license/acevedoossiel/webStore)
 
@@ -9,43 +9,42 @@ README available in [Español](README-es.md)
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 
 
-## Overview
-This repository provides a template for building a web application using Node.js with Express for the backend, MongoDB for the database, and React for the frontend
+## Descripcion
+Este repositorio proporciona una plantilla para construir una aplicación web usando Node.js con Express para el backend, MongoDB para la base de datos y React para el frontend
 
-## Prerequisites
+## Prerequisitos
 - Node v20.16.0
-- pnpm/npm (preferably pnpm) 
+- pnpm/npm (preferentemente pnpm) 
 - MongoDB
 
-## Installation
+## Instalacion
 ```bash
-# Clone repository
+# Clonar repositorio
   git clone https://github.com/acevedoossiel/webStore.git
 
-# Install backend dependencies
+# Instalar dependencias de backend
   cd server
   pnpm install
 
-# Install frontend dependencies
+# Instalar dependencias de frontend
   cd cliente
   pnpm install
 
-# Environment variables
- - Create a `.env` file in the "cliente" directory and add variables:
+# Variables de entorno
+ - Crear un archivo `.env`  en el directorio "cliente" y agregar las variables:
     * PORT=4200
 
 ```
-## Usage
+## Uso
 ```bash
-# Start the backend server using 
+# Iniciar el servidor backend usando
   cd server
   pnpm run start:dev
 
-# Start the frontend using 
+# Iniciar el frontend
   cd cliente
   pnpm start
 ```
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+## Licencia
+Este proyecto tiene una licencia de tipo MIT - ver [LICENCIA](LICENSE) para los detalles.
