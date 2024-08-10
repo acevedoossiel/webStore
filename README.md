@@ -10,12 +10,17 @@ README available in [Español](README-es.md)
 
 
 ## Overview
-This repository provides a template for building a web application using Node.js with Express for the backend, MongoDB for the database, and React for the frontend
+This repository provides a template for building a web application using Node.js with Express for the backend, MongoDB for the database, and React for the frontend. The application is structured using a Modular Architecture, which separates different concerns into specific modules, making the code more maintainable and scalable.
+
+## Features
+- **Modular Architecture:** The project is organized into different modules, including controllers, services, models, and routes, ensuring a clear separation of concerns.
+- **MVC (Model-View-Controller) Pattern:** The application follows the MVC pattern, where the Model represents the data and business logic, the View is handled by the React frontend, and the Controller manages the communication between the Model and View, processing requests and returning appropriate responses.
+
 
 ## Prerequisites
-- Node v20.16.0
-- pnpm/npm (preferably pnpm) 
-- MongoDB
+- **Node v20.16.0**
+- **pnpm/npm** (preferably pnpm) 
+- **MongoDB**
 
 ## Installation
 ```bash
