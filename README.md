@@ -18,8 +18,9 @@ This repository provides a template for building a web application using Node.js
 
 
 ## Prerequisites
+- **nvm**
 - **Node v20.16.0**
-- **pnpm/npm** (preferably pnpm) 
+- **pnpm** 
 - **MongoDB**
 
 ## Installation
@@ -27,12 +28,7 @@ This repository provides a template for building a web application using Node.js
 # Clone repository
   git clone https://github.com/acevedoossiel/webStore.git
 
-# Install backend dependencies
-  cd server
-  pnpm install
-
-# Install frontend dependencies
-  cd cliente
+# Install backend and frontend  dependencies
   pnpm install
 
 # Environment variables
@@ -42,6 +38,13 @@ This repository provides a template for building a web application using Node.js
 ```
 ## Usage
 ```bash
+#Install the node version
+  nvm use
+
+# Use typescript compiler
+  cd server
+  pnpm tsc
+
 # Start the backend server using 
   cd server
   pnpm run start:dev
