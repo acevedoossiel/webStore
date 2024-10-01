@@ -18,7 +18,6 @@ This repository provides a template for building a web application using Node.js
 
 
 ## Prerequisites
-- **mongo**
 - **nvm**
 - **Node v20.16.0**
 - **pnpm** 
@@ -39,8 +38,6 @@ This repository provides a template for building a web application using Node.js
 ```
 ## Usage
 ```bash
-# Run mongod service
-
 #Install the node version
   nvm use
 
