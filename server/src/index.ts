@@ -1,7 +1,9 @@
 import express, { Application } from 'express';
-import { connectDB } from './database'; //acceso a la base de datos
+import { connectDB } from './database';
 import morgan from 'morgan';
 import cors from 'cors';
+import RoleRoutes from './routes/roleRoute'
+
 class Server {
     public app: Application;
     constructor() {
@@ -12,19 +14,20 @@ class Server {
     }
 
     config(): void {
-        this.app.set('port', process.env.PORT || 3000); //En que puerto va a ejecutar
-        this.app.use(morgan('dev')); //que ejecutamos y que tiempo
-        this .app.use(cors({origin:  "http://localhost:4200" , credentials:  true })); 
-        this.app.use(express.json()); //permite que utilicemos json
-        this.app.use(express.urlencoded({ extended: false })); //decodifca las url
+        this.app.set('port', process.env.PORT || 3000);
+        this.app.use(morgan('dev'));
+        this.app.use(cors());
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: false }));
     }
     routes(): void {
+        this.app.use('/api/roles', RoleRoutes);
 
     }
-    
+
     start(): void {
         this.app.listen(this.app.get('port'), () => {
-            console.log('El servidor se esta ejecutando en el puerto: ', this.app.get('port'));
+            console.log('Server running on port 3000: ', this.app.get('port'));
         });
     }
 }
