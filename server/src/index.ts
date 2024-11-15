@@ -3,6 +3,7 @@ import { connectDB } from './database';
 import morgan from 'morgan';
 import cors from 'cors';
 import RoleRoutes from './routes/roleRoute'
+import UserRoutes from './routes/userRoute'
 
 class Server {
     public app: Application;
@@ -22,7 +23,7 @@ class Server {
     }
     routes(): void {
         this.app.use('/api/roles', RoleRoutes);
-
+        this.app.use('/api/users', UserRoutes);
     }
 
     start(): void {
