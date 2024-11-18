@@ -13,25 +13,13 @@ class userService {
         phone: number;
     }) {
         try {
-            // Imprimir los datos antes de intentar crear el usuario
-            console.log("Attempting to create user with data:", userData);
-
-            // Hashear la contraseña
             const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-            // Crear el nuevo usuario
             const newUser = new userModel({
                 ...userData,
                 password: hashedPassword,
             });
-
-            // Guardar el usuario
             return await newUser.save();
         } catch (error) {
-            // Imprimir el error completo para obtener más detalles
-            console.error("Error while creating the user:", error);
-
-            // Asegurarse de lanzar un error con más detalles
             throw new Error(`Error while creating the user: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     }

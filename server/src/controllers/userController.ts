@@ -12,18 +12,16 @@ class userController {
 
             const newUser = await UserService.createUser({ name, lastname, dateBirth, phone, email, password, role });
             return res.status(201).json(newUser);
-        } catch (error: unknown) {  // Se especifica 'unknown' explícitamente
+        } catch (error: unknown) {
             console.error('Error while creating user:', error);
 
-            // Verifica si el error es una instancia de Error
             if (error instanceof Error) {
                 return res.status(500).json({
-                    message: `Error creating the user: ${error.message}`,  // Acceder a 'message' porque ya verificamos el tipo
+                    message: `Error creating the user: ${error.message}`,
                     error: error
                 });
             }
 
-            // Si el error no es una instancia de Error, responde con un error genérico
             return res.status(500).json({
                 message: 'Unknown error occurred',
                 error: error
