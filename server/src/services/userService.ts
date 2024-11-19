@@ -1,4 +1,5 @@
 import userModel from "../models/userModel";
+import bcrypt from 'bcryptjs';
 
 class userService {
 
@@ -12,19 +13,22 @@ class userService {
         phone: number;
     }) {
         try {
-            const newUser = new userModel(userData);
+            const hashedPassword = await bcrypt.hash(userData.password, 10);
+            const newUser = new userModel({
+                ...userData,
+                password: hashedPassword,
+            });
             return await newUser.save();
         } catch (error) {
-            throw new Error(`Error while creating the userx`);
+            throw new Error(`Error while creating the user: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     }
-
 
     async getAllUsers() {
         try {
             return await userModel.find();
         } catch (error) {
-            throw new Error('Error while getting user');
+            throw new Error('Error while getting users');
         }
     }
 
@@ -50,28 +54,31 @@ class userService {
         phone: number;
     }>) {
         try {
-            const updateUser = await userModel.findByIdAndUpdate(id, userData, { new: true });
-            if (!updateUser) {
+            if (userData.password) {
+                userData.password = await bcrypt.hash(userData.password, 10);
+            }
+
+            const updatedUser = await userModel.findByIdAndUpdate(id, userData, { new: true });
+            if (!updatedUser) {
                 throw new Error('User not found');
             }
-            return updateUser;
+            return updatedUser;
         } catch (error) {
-            throw new Error(`Error while updating user`);
+            throw new Error('Error while updating user');
         }
     }
-    
 
     async deleteUserById(id: string) {
         try {
-            const deleteUser = await userModel.findByIdAndDelete(id);
-            if (!deleteUser) {
+            const deletedUser = await userModel.findByIdAndDelete(id);
+            if (!deletedUser) {
                 throw new Error('User not found');
             }
-            return deleteUser;
+            return deletedUser;
         } catch (error) {
             throw new Error('Error while deleting user by id');
         }
     }
-
 }
+
 export const UserService = new userService();

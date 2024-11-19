@@ -1,11 +1,12 @@
 import { Schema, model, Document } from 'mongoose';
+import bcrypt from 'bcryptjs';
 import { iRole } from './roleModel';
 
 export interface IUser extends Document {
     name: string;
     lastname: string;
     dateBirth: Date;
-    phone: number;
+    phone: string;
     email: string;
     password: string;
     role: iRole['_id'];
@@ -32,6 +33,7 @@ const userSchema = new Schema<IUser>(
             unique: true,
             required: true,
             trim: true,
+            match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
         },
         password: {
             type: String,
@@ -43,16 +45,27 @@ const userSchema = new Schema<IUser>(
             required: true,
         },
         phone: {
-            type: Number,
+            type: String,
             required: true,
             unique: true,
             trim: true,
+            match: /^[0-9]{10}$/
         },
     },
     {
         timestamps: true,
     }
 );
+
+userSchema.pre('save', async function (next) {
+    if (this.isModified('password') || this.isNew) {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+    next();
+});
+
+userSchema.index({ email: 1 });
+userSchema.index({ phone: 1 });
 
 const userModel = model<IUser>('User', userSchema);
 
