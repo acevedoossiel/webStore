@@ -1,6 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { iRole } from './roleModel';
+import roleModel from './roleModel';
 
 export interface IUser extends Document {
     name: string;
@@ -33,7 +34,7 @@ const userSchema = new Schema<IUser>(
             unique: true,
             required: true,
             trim: true,
-            match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+            match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         },
         password: {
             type: String,
@@ -43,13 +44,20 @@ const userSchema = new Schema<IUser>(
             type: Schema.Types.ObjectId,
             ref: 'Role',
             required: true,
+            validate: {
+                validator: async function (value: Schema.Types.ObjectId) {
+                    const roleExists = await roleModel.exists({ _id: value });
+                    return roleExists != null;
+                },
+                message: 'The specified role does not exist.',
+            },
         },
         phone: {
             type: String,
             required: true,
             unique: true,
             trim: true,
-            match: /^[0-9]{10}$/
+            match: /^[0-9]{10}$/,
         },
     },
     {
