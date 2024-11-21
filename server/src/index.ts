@@ -28,7 +28,7 @@ class Server {
 
     start(): void {
         this.app.listen(this.app.get('port'), () => {
-            console.log('Server running on port 3000: ', this.app.get('port'));
+            console.log('Server running on port: ', this.app.get('port'));
         });
     }
 }
