@@ -1,19 +1,13 @@
-/* src/components/Navbar.css */
 .navbar {
-    background-color: #f8f8f7;
-    /* Color de fondo claro (similar al de Apple) */
+    background-color: #ffffff;
     padding: 10px 20px;
-    /* Espaciado */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Sombra suave */
 }
 
 .navbar-container {
     display: flex;
     justify-content: space-between;
-    /* Distribuye los elementos de manera que estén en los extremos */
     align-items: center;
-    /* Alineación vertical */
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -21,35 +15,13 @@
 .navbar-logo {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #333;
-    /* Color oscuro para el logo */
+    color: #ffffff;
     text-decoration: none;
-}
-
-.navbar-links {
-    display: flex;
-    list-style-type: none;
-}
-
-.navbar-item {
-    margin: 0 15px;
-    /* Espacio entre los elementos */
-    font-size: 1rem;
-    color: #333;
-    /* Color oscuro para los enlaces */
-    text-decoration: none;
-    transition: color 0.3s ease-in-out;
-}
-
-.navbar-item:hover {
-    color: #0071e3;
-    /* Color al pasar el mouse (similar al azul de Apple) */
 }
 
 .navbar-icons {
     display: flex;
     gap: 15px;
-    /* Espacio entre los iconos */
 }
 
 .search-btn,
@@ -63,5 +35,135 @@
 .search-btn:hover,
 .cart-btn:hover {
     color: #0071e3;
-    /* Color al pasar el mouse en los botones */
+}
+
+.icon {
+    font-size: 1.5rem;
+    color: #00AEF2;
+    transition: color 0.3s ease;
+}
+
+.icon:hover {
+    color: #018BD5;
+}
+
+.logo-image {
+    width: 150px;
+    height: auto;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    color: #0071e3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.menu li {
+    padding: 15px 0;
+}
+
+.menu li a {
+    color: black;
+    text-decoration: none;
+    font-size: 3rem;
+    display: block;
+}
+
+.menu li a:hover {
+    color: #0071e3;
+}
+
+@media (max-width: 768px) {
+    .navbar-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .navbar-icons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .logo-image {
+        width: 150px;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px;
+    }
+
+    .navbar-logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .search-btn,
+    .cart-btn {
+        font-size: 1.2rem;
+    }
+
+    .logo-image {
+        width: 150px;
+        height: auto;
+    }
+}
+
+.cancel-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: transparent;
+    color: #0071e3;
+}
+
+.icon-logo {
+    width: 20px;
+    height: auto;
 }
