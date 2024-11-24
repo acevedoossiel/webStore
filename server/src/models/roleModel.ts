@@ -14,6 +14,7 @@ const roleSchema = new Schema<iRole>({
         type: String,
         enum: Object.values(roleType),
         required: true,
+        unique: true
     }
 },
 
