@@ -11,15 +11,23 @@ class productService {
         capacity: number;
     }) {
         try {
-            const newProduct = new productModel({productData
+            const existingProduct = await productModel.findOne({
+                brand: productData.brand,
+                modelo: productData.modelo,
             });
+
+            if (existingProduct) {
+                throw new Error('A product with the same brand and model already exists');
+            }
+            const newProduct = new productModel(productData);
             return await newProduct.save();
         } catch (error) {
-            throw new Error('Error while creating the product');
+            throw new Error(`Error while creating the product: ${error}`);
         }
     }
 
-    async getAllProduct() {
+
+    async getAllProducts() {
         try {
             return await productModel.find();
         } catch (error) {
