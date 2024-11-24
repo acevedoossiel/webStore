@@ -5,7 +5,6 @@ class userController {
     async createUser(req: Request, res: Response) {
         try {
             const { name, lastname, dateBirth, phone, email, password, role } = req.body;
-            console.log("sisisis" + password)
             if (!password) {
                 return res.status(400).json({ message: 'Password is required' });
             }

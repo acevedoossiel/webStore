@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import RoleRoutes from './routes/roleRoute'
 import UserRoutes from './routes/userRoute'
+import ProductRoutes from './routes/productRoute'
 
 class Server {
     public app: Application;
@@ -24,6 +25,7 @@ class Server {
     routes(): void {
         this.app.use('/api/roles', RoleRoutes);
         this.app.use('/api/users', UserRoutes);
+        this.app.use('/api/products', ProductRoutes);
     }
 
     start(): void {
