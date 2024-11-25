@@ -43,14 +43,41 @@ function Navbar() {
         <div className="menu">
           <ul>
             <li>
-              <Link to="/" onClick={closeMenu}>Home</Link>
+              <Link to="/" onClick={closeMenu}>HOME</Link>
             </li>
             <li>
-              <Link to="/about" onClick={closeMenu}>About</Link>
+              <Link to="/catalogo" onClick={closeMenu}>CATÁLOGO</Link>
             </li>
             <li>
-              <Link to="/roles" onClick={closeMenu}>Roles</Link>
+              <Link to="/promociones" onClick={closeMenu}>PROMOCIONES</Link>
             </li>
+            <li>
+              <Link to="/vapes" onClick={closeMenu}>VAPES</Link>
+            </li>
+            <li>
+              <Link to="/plumas" onClick={closeMenu}>PLUMAS</Link>
+            </li>
+            <li>
+              <h1>CONTACTANOS:</h1>
+            </li>
+            <li className="instagram-icon">
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/images/logos/insta.png" alt="Instagram" />
+                <p className="instagram-text">Principal</p>
+              </a>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/images/logos/insta.png" alt="Instagram" />
+                <p className="instagram-text">Respaldo</p>
+              </a>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a href="#" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/images/logos/whats.png" alt="Instagram" />
+                <p className="instagram-text">WhasApp</p>
+              </a>
+            </li>
+
           </ul>
 
           <button className="cancel-btn" onClick={closeMenu}>Cancelar <img
