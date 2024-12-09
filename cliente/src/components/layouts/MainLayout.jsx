@@ -1,15 +1,18 @@
 import React from 'react';
-import Navbar from '../shared/Navbar';
+import { Outlet } from 'react-router-dom';
+import Navbar from '../shared/Navbar'; // Navbar general
 import Footer from '../shared/Footer';
 
-const MainLayout = ({ children }) => {
-  return (
-    <div>
-      <Navbar />
-      <main>{children}</main>
-      <Footer />
-    </div>
-  );
+const MainLayout = () => {
+    return (
+        <div>
+            <Navbar />
+            <main>
+                <Outlet /> {/* Renderiza las rutas generales */}
+            </main>
+            <Footer />
+        </div>
+    );
 };
 
 export default MainLayout;

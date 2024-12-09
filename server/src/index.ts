@@ -1,10 +1,14 @@
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import express, { Application } from 'express';
 import { connectDB } from './database';
 import morgan from 'morgan';
 import cors from 'cors';
-import RoleRoutes from './routes/roleRoute'
-import UserRoutes from './routes/userRoute'
-import ProductRoutes from './routes/productRoute'
+import RoleRoutes from './routes/roleRoute';
+import UserRoutes from './routes/userRoute';
+import ProductRoutes from './routes/productRoute';
+
+dotenv.config();
 
 class Server {
     public app: Application;
@@ -20,8 +24,10 @@ class Server {
         this.app.use(morgan('dev'));
         this.app.use(cors());
         this.app.use(express.json());
+        this.app.use(cookieParser());
         this.app.use(express.urlencoded({ extended: false }));
     }
+
     routes(): void {
         this.app.use('/api/roles', RoleRoutes);
         this.app.use('/api/users', UserRoutes);
@@ -34,5 +40,6 @@ class Server {
         });
     }
 }
+
 const server = new Server();
 server.start();
