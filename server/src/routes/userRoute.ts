@@ -12,6 +12,8 @@ class userRoutes {
         this.router.get('/get/:id', UserController.getUserById);
         this.router.put('/update/:id', UserController.updateUserById);
         this.router.delete('/delete/:id', UserController.deleteUserById);
+        this.router.post('/login', UserController.login);
+        this.router.post('/validateToken', UserController.validateToken);
     }
 }
 const UserRoutes = new userRoutes();

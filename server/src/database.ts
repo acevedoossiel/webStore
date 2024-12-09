@@ -1,8 +1,9 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
+import { config } from './config';
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://localhost/webStore');
+    await mongoose.connect(config.dbUrl);
     console.log("Database connected");
   }
   catch (error) {
