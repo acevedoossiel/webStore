@@ -27,7 +27,7 @@ class Server {
         this.app.use('/api/users', UserRoutes);
         this.app.use('/api/products', ProductRoutes);
     }
-  
+
     start(): void {
         this.app.listen(this.app.get('port'), () => {
             console.log('Server running on port: ', this.app.get('port'));
