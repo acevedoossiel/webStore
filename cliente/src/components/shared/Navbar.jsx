@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+   import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PiHandbagFill } from "react-icons/pi";
 import { LuMenu } from "react-icons/lu";
@@ -14,6 +14,11 @@ function Navbar() {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  // Mensaje dinámico para WhatsApp
+  const phoneNumber = "529531720143";
+  const message = "Hola, quiero más información.";
+  const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
     <nav className="navbar">
@@ -58,33 +63,33 @@ function Navbar() {
               <Link to="/plumas" onClick={closeMenu}>PLUMAS</Link>
             </li>
             <li>
-              <h1>CONTACTANOS:</h1>
+              <h1>CONTÁCTANOS:</h1>
             </li>
             <li className="instagram-icon">
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/only.wapes/" target="_blank" rel="noopener noreferrer">
                 <img src="/assets/images/logos/insta.png" alt="Instagram" />
-                <p className="instagram-text">Principal</p>
+                <p className="media-text">Principal</p>
               </a>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a href="#" target="_blank" rel="noopener noreferrer">
                 <img src="/assets/images/logos/insta.png" alt="Instagram" />
-                <p className="instagram-text">Respaldo</p>
+                <p className="media-text">Respaldo</p>
               </a>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#" target="_blank" rel="noopener noreferrer">
-                <img src="/assets/images/logos/whats.png" alt="Instagram" />
-                <p className="instagram-text">WhasApp</p>
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                <img src="/assets/images/logos/whats.png" alt="WhatsApp" />
+                <p className="media-text">WhatsApp</p>
               </a>
             </li>
-
           </ul>
 
-          <button className="cancel-btn" onClick={closeMenu}>Cancelar <img
-            src="/assets/images/logos/main-poto.png"
-            alt="Cancelar"
-            className="icon-logo"
-          /></button>
+          <button className="cancel-btn" onClick={closeMenu}>
+            Cancelar 
+            <img
+              src="/assets/images/logos/main-poto.png"
+              alt="Cancelar"
+              className="icon-logo"
+            />
+          </button>
         </div>
       )}
     </nav>
@@ -92,3 +97,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
