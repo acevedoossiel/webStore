@@ -15,8 +15,7 @@ function Navbar() {
     setIsMenuOpen(false);
   };
 
-  // Mensaje dinámico para WhatsApp
-  const phoneNumber = "529531720143";
+  const phoneNumber = "523334131768";
   const message = "Hola, quiero más información.";
   const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
@@ -66,12 +65,12 @@ function Navbar() {
               <h1>CONTÁCTANOS:</h1>
             </li>
             <li className="instagram-icon">
-              <a href="https://www.instagram.com/only.wapes/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/only.wapes?igsh=MWN3aWx6Mmo1dXZqcg==" target="_blank" rel="noopener noreferrer">
                 <img src="/assets/images/logos/insta.png" alt="Instagram" />
                 <p className="media-text">Principal</p>
               </a>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/onlywape.respaldo?igsh=OWMwZXMyeGw2d2Jk&utm_source=qr" target="_blank" rel="noopener noreferrer">
                 <img src="/assets/images/logos/insta.png" alt="Instagram" />
                 <p className="media-text">Respaldo</p>
               </a>
