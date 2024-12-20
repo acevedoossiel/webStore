@@ -27,9 +27,7 @@ const AppContent = () => {
 
           if (response.ok) {
             const data = await response.json();
-            console.log('Token válido:', data);
           } else {
-            console.log('Token inválido, redirigiendo a login...');
             Cookies.remove('authToken');
           }
         }
