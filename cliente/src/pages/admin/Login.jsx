@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import styles from './Login.module.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [greeting, setGreeting] = useState('');
     const navigate = useNavigate();
-    const { login, isAuthenticated } = useAuth(); // Asegúrate de que 'isAuthenticated' esté disponible
+    const { login, isAuthenticated } = useAuth();
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/admin'); // Redirige a /admin si ya está autenticado
+            navigate('/admin');
         }
-    }, [isAuthenticated, navigate]); // Depende de 'isAuthenticated'
+    }, [isAuthenticated, navigate]);
+
+    useEffect(() => {
+        const currentHour = new Date().getHours();
+        if (currentHour < 12) {
+            setGreeting('Buenos días');
+        } else if (currentHour < 18) {
+            setGreeting('Buenas tardes');
+        } else {
+            setGreeting('Buenas noches');
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,37 +43,37 @@ const Login = () => {
             }
 
             const data = await response.json();
-            login(data.token); // Guarda el token y actualiza el estado de autenticación
+            login(data.token);
         } catch (err) {
             setError('Hubo un error al iniciar sesión. Inténtalo de nuevo.');
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
+        <div className={styles.loginContainer}>
+            <h2>{greeting}</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email:</label>
+                <div className={styles.formGroup}>
                     <input
                         type="email"
                         value={email}
+                        placeholder="Email"
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
-                <div>
-                    <label>Contraseña:</label>
+                <div className={styles.formGroup}>
                     <input
                         type="password"
                         value={password}
+                        placeholder="Contraseña"
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
-                <button type="submit">Iniciar sesión</button>
+                <button type="submit" className={styles.loginButton}>Iniciar sesión</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className={styles.errorMessage}>{error}</p>}
         </div>
     );
 };

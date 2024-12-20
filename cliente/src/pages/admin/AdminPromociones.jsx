@@ -1,10 +1,9 @@
 import React from 'react';
 
 function AdminPromociones() {
-    console.log('AdminPromociones se ha renderizado.');
     return (
         <div>
-            <h1>Editar productos</h1>
+            <h1>Promociones manejo</h1>
         </div>
     );
 }
