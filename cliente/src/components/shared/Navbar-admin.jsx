@@ -3,9 +3,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { LuMenu } from "react-icons/lu";
 import { IoLogOut } from "react-icons/io5";
 import { useAuth } from '../../contexts/AuthContext';
-import '../Navbar-admin.css'; // Asegúrate de que los estilos estén definidos correctamente
+import styles from './NavbarAdmin.module.css';
 
-// Lazy load para el diálogo de confirmación de logout
 const ConfirmLogoutDialog = lazy(() => import('./ConfirmLogoutDialog'));
 
 const NAV_ITEMS = [
@@ -15,69 +14,62 @@ const NAV_ITEMS = [
 ];
 
 function NavbarAdmin() {
-    const { isAuthenticated, logout } = useAuth();  // Usa el hook para obtener el estado de autenticación
+    const { isAuthenticated, logout } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
     const navigate = useNavigate();
 
-    // Maneja el estado del menú
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    // Cierra el menú
     const closeMenu = () => setIsMenuOpen(false);
 
-    // Maneja el diálogo de logout
     const openLogoutDialog = () => setLogoutDialogOpen(true);
     const closeLogoutDialog = () => setLogoutDialogOpen(false);
     const confirmLogout = () => {
-        logout();  // Ejecuta la función de logout del contexto
+        logout();
         closeLogoutDialog();
         navigate('/login');
     };
 
     return (
-        <nav className="navbar">
-            <div className="navbar-container">
-                {/* Botón del menú */}
+        <nav className={styles.navbarAdmin}>
+            <div className={styles.navbarContainer}>
                 <button 
-                    className="cart-btn" 
+                    className={styles.cartBtn} 
                     onClick={toggleMenu} 
                     aria-expanded={isMenuOpen} 
                     aria-label="Toggle Menu"
                 >
-                    <LuMenu className="icon" />
+                    <LuMenu className={styles.icon} />
                 </button>
 
-                {/* Logo */}
-                <NavLink to="/admin" className="navbar-logo">
+                <NavLink to="/admin" className={styles.navbarLogo}>
                     <img
-                        src="/assets/images/banners/navbar2.jpg" // Asegúrate de que esta ruta sea correcta
+                        src="/assets/images/banners/navbar2.jpg"
                         alt="Onlyvapes Logo"
-                        className="logo-image"
+                        className={styles.logoImage}
                     />
                 </NavLink>
 
-                {/* Botón de logout solo si el usuario está autenticado */}
                 {isAuthenticated && (
                     <button 
-                        className="cart-btn" 
+                        className={styles.cartBtn} 
                         onClick={openLogoutDialog} 
                         aria-label="Logout"
                     >
-                        <IoLogOut className="icon" />
+                        <IoLogOut className={styles.icon} />
                     </button>
                 )}
             </div>
 
-            {/* Menú desplegable */}
             {isMenuOpen && (
-                <div className="menu">
+                <div className={styles.menu}>
                     <ul>
                         {NAV_ITEMS.map((item) => (
                             <li key={item.to}>
                                 <NavLink 
                                     to={item.to}
-                                    className={({ isActive }) => (isActive ? 'active' : '')}
+                                    className={({ isActive }) => (isActive ? styles.active : '')}
                                     onClick={closeMenu}
                                     onKeyDown={(e) => e.key === 'Enter' && closeMenu()}
                                 >
@@ -87,7 +79,7 @@ function NavbarAdmin() {
                         ))}
                     </ul>
                     <button 
-                        className="cancel-btn" 
+                        className={styles.cancelBtn} 
                         onClick={closeMenu}
                         aria-label="Close Menu"
                     >
@@ -95,13 +87,12 @@ function NavbarAdmin() {
                         <img 
                             src="/assets/images/logos/main-poto.png" 
                             alt="Cancelar" 
-                            className="icon-logo"
+                            className={styles.iconLogo}
                         />
                     </button>
                 </div>
             )}
 
-            {/* Diálogo de confirmación de logout */}
             <Suspense fallback={<div>Cargando...</div>}>
                 <ConfirmLogoutDialog 
                     open={logoutDialogOpen} 

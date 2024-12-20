@@ -7,7 +7,7 @@ const SecondLayout = ({ onLogin, handleLogout }) => {
         <div>
             <NavbarAdmin onLogin={onLogin} handleLogout={handleLogout} />
             <main>
-                <Outlet /> {/* Renderiza las rutas anidadas */}
+                <Outlet />
             </main>
         </div>
     );

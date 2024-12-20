@@ -2,38 +2,42 @@
     background-color: #ffffff;
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 100%;
+    width: 100%;
+}
+
+.navbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     margin: 0 auto;
 }
 
-.navbar-logo {
+.navbarLogo {
     font-size: 1.8rem;
     font-weight: bold;
     color: #ffffff;
     text-decoration: none;
 }
 
-.navbar-icons {
+.navbarIcons {
     display: flex;
     gap: 15px;
 }
 
-.search-btn,
-.cart-btn {
+.searchBtn,
+.cartBtn {
     background: none;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
 }
 
-.search-btn:hover,
-.cart-btn:hover {
+.searchBtn:hover,
+.cartBtn:hover {
     color: #0071e3;
 }
 
@@ -47,9 +51,11 @@
     color: #018BD5;
 }
 
-.logo-image {
-    width: 150px;
+.logoImage {
+    width: 100%;
+    max-width: 150px;
     height: auto;
+    transition: width 0.3s ease, height 0.3s ease;
 }
 
 .menu {
@@ -72,7 +78,6 @@
 .menu ul {
     list-style-type: none;
     margin: 10px;
-    top: auto;
     padding: 0;
     width: 100%;
 }
@@ -92,7 +97,7 @@
     color: #0071e3;
 }
 
-.instagram-icon {
+.instagramIcon {
     display: flex;
     align-items: center;
     margin-top: auto;
@@ -100,26 +105,26 @@
     gap: 10px;
 }
 
-.instagram-icon a {
+.instagramIcon a {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 0;
 }
 
-.instagram-icon img {
+.instagramIcon img {
     width: 3.5rem;
     height: 3.5rem;
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.instagram-icon img:hover {
+.instagramIcon img:hover {
     transform: scale(1.2);
     opacity: 0.8;
 }
 
-.media-text {
+.mediaText {
     margin-top: 4px;
     font-size: 1rem;
     color: #888888;
@@ -128,7 +133,7 @@
 }
 
 @media (min-width: 1024px) {
-    .navbar-container {
+    .navbarContainer {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -139,33 +144,33 @@
         font-size: 3rem;
     }
 
-    .instagram-icon img {
+    .instagramIcon img {
         width: 5rem;
         height: 5rem;
     }
 }
 
 @media (max-width: 1024px) and (min-width: 768px) {
-    .navbar-container {
+    .navbarContainer {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    .navbar-logo {
+    .navbarLogo {
         font-size: 1.8rem;
         font-weight: bold;
         color: #ffffff;
         text-decoration: none;
     }
 
-    .navbar-icons {
+    .navbarIcons {
         display: flex;
         gap: 15px;
     }
 
-    .logo-image {
-        width: 150px;
+    .logoImage {
+        max-width: 120px;
         height: auto;
     }
 
@@ -173,7 +178,7 @@
         font-size: 2rem;
     }
 
-    .instagram-icon img {
+    .instagramIcon img {
         width: 4.5rem;
         height: 4.5rem;
     }
@@ -182,33 +187,33 @@
         font-size: 2rem;
     }
     
-    .media-text {
+    .mediaText {
         font-size: 0.75rem;
         color: #888888; 
     }
 }
 
 @media (max-width: 768px) {
-    .navbar-container {
+    .navbarContainer {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    .navbar-logo {
+    .navbarLogo {
         font-size: 1.8rem;
         font-weight: bold;
         color: #ffffff;
         text-decoration: none;
     }
 
-    .navbar-icons {
+    .navbarIcons {
         display: flex;
         gap: 15px;
     }
 
-    .logo-image {
-        width: 150px;
+    .logoImage {
+        max-width: 100px;
         height: auto;
     }
 
@@ -216,13 +221,13 @@
         font-size: 1.5rem;
     }
 
-    .instagram-icon img {
+    .instagramIcon img {
         width: 4rem;
         height: 4rem;
     }
 
-    .search-btn,
-    .cart-btn {
+    .searchBtn,
+    .cartBtn {
         font-size: 1.2rem;
     }
 
@@ -230,7 +235,7 @@
         font-size: 1rem;
     }
 
-    .media-text {
+    .mediaText {
         font-size: 0.75rem;
         color: #888888;
     }
@@ -241,7 +246,7 @@
         padding: 10px;
     }
 
-    .navbar-logo {
+    .navbarLogo {
         font-size: 1.8rem;
         font-weight: bold;
         color: #ffffff;
@@ -251,13 +256,13 @@
         text-align: center;
     }
 
-    .search-btn,
-    .cart-btn {
+    .searchBtn,
+    .cartBtn {
         font-size: 1.2rem;
     }
 
-    .logo-image {
-        width: 150px;
+    .logoImage {
+        max-width: 80px;
         height: auto;
     }
 
@@ -265,7 +270,7 @@
         font-size: 1.5rem;
     }
 
-    .instagram-icon img {
+    .instagramIcon img {
         width: 3rem;
         height: 3rem;
     }
@@ -274,13 +279,13 @@
         font-size: 1.2rem;
     }
 
-    .media-text {
+    .mediaText {
         font-size: 0.65rem;
         color: #888888;
     }
 }
 
-.cancel-btn {
+.cancelBtn {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -298,12 +303,12 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.cancel-btn:hover {
+.cancelBtn:hover {
     background-color: transparent;
     color: #0071e3;
 }
 
-.icon-logo {
+.iconLogo {
     width: 20px;
     height: auto;
 }

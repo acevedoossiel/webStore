@@ -1,10 +1,9 @@
 import React from 'react';
 
 function AdminRedes() {
-    console.log('AdminRedes se ha renderizado.');
     return (
         <div>
-            <h1>Redes</h1>
+            <h1>Redes administración</h1>
         </div>
     );
 }
