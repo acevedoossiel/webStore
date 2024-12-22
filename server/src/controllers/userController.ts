@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/userService";
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import UserModel from '../models/userModel';
 import { config } from '../config';
 
 class userController {
@@ -92,41 +90,13 @@ class userController {
         }
     }
 
-    async login(req: Request, res: Response) {
-        const { email, password } = req.body;
-        try {
-            const user = await UserModel.findOne({ email });
-            if (!user) {
-                return res.status(401).json({ error: 'Credenciales incorrectas' });
-            }
-    
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(401).json({ error: 'Credenciales incorrectas' });
-            }
-    
-            const token = jwt.sign(
-                { id: user.id, email: user.email },
-                config.jwtSecret,
-                { expiresIn: '1h' }
-            );
-    
-            console.log('Token generado:', token);
-    
-            return res.json({ token });
-        } catch (error) {
-            console.error('Error en el servidor:', error);
-            return res.status(500).json({ error: 'Error en el servidor' });
-        }
-    }
-
     async validateToken(req: Request, res: Response) {
         const authToken = req.body.authToken; // Obtener el token del cuerpo de la solicitud
-    
+
         if (!authToken) {
             return res.status(401).json({ message: "Token no proporcionado" });
         }
-    
+
         try {
             const decoded = jwt.verify(authToken, config.jwtSecret) as jwt.JwtPayload;
             return res.status(200).json({ message: "Token válido", userId: decoded.id });
@@ -135,7 +105,26 @@ class userController {
             return res.status(401).json({ message: "Token inválido o expirado" });
         }
     }
-    
+
+    async login(req: Request, res: Response) {
+        try {
+            const { email, password } = req.body;
+            if (!email || !password) {
+                return res.status(400).json({ message: "Email and password are required" });
+            }
+            const userData = await UserService.login(email, password);
+            return res.status(200).json({
+                message: "Login successful",
+                user: userData,
+            });
+        } catch (error) {
+            console.error("Error while logging in:", error);
+            return res.status(401).json({
+                message: error instanceof Error ? error.message : "Unknown error",
+            });
+        }
+    }
+
 }
 
 export const UserController = new userController();

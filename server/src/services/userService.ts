@@ -13,11 +13,7 @@ class userService {
         phone: number;
     }) {
         try {
-            const hashedPassword = await bcrypt.hash(userData.password, 10);
-            const newUser = new userModel({
-                ...userData,
-                password: hashedPassword,
-            });
+            const newUser = new userModel(userData);
             return await newUser.save();
         } catch (error) {
             throw new Error(`Error while creating the user: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -77,6 +73,30 @@ class userService {
             return deletedUser;
         } catch (error) {
             throw new Error('Error while deleting user by id');
+        }
+    }
+
+    async login(email: string, password: string) {
+        try {
+            const user = await userModel.findOne({ email });
+            if (!user) {
+                throw new Error("Invalid email or password");
+            }
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
+                throw new Error("Invalid email or password");
+            }
+            return {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            };
+        } catch (error) {
+            throw new Error(
+                `Error while logging in: ${error instanceof Error ? error.message : "Unknown error"
+                }`
+            );
         }
     }
 }
