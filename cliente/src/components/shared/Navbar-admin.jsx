@@ -62,36 +62,34 @@ function NavbarAdmin() {
                 )}
             </div>
 
-            {isMenuOpen && (
-                <div className={styles.menu}>
-                    <ul>
-                        {NAV_ITEMS.map((item) => (
-                            <li key={item.to}>
-                                <NavLink 
-                                    to={item.to}
-                                    className={({ isActive }) => (isActive ? styles.active : '')}
-                                    onClick={closeMenu}
-                                    onKeyDown={(e) => e.key === 'Enter' && closeMenu()}
-                                >
-                                    {item.label}
-                                </NavLink>
-                            </li>
-                        ))}
-                    </ul>
-                    <button 
-                        className={styles.cancelBtn} 
-                        onClick={closeMenu}
-                        aria-label="Close Menu"
-                    >
-                        Cancelar 
-                        <img 
-                            src="/assets/images/logos/main-poto.png" 
-                            alt="Cancelar" 
-                            className={styles.iconLogo}
-                        />
-                    </button>
-                </div>
-            )}
+            <div className={`${styles.menu} ${isMenuOpen ? styles.open : ''}`}>
+                <ul>
+                    {NAV_ITEMS.map((item) => (
+                        <li key={item.to}>
+                            <NavLink 
+                                to={item.to}
+                                className={({ isActive }) => (isActive ? styles.active : '')}
+                                onClick={closeMenu}
+                                onKeyDown={(e) => e.key === 'Enter' && closeMenu()}
+                            >
+                                {item.label}
+                            </NavLink>
+                        </li>
+                    ))}
+                </ul>
+                <button 
+                    className={styles.cancelBtn} 
+                    onClick={closeMenu}
+                    aria-label="Close Menu"
+                >
+                    Cancelar 
+                    <img 
+                        src="/assets/images/logos/logo-gris.png" 
+                        alt="Cancelar" 
+                        className={styles.iconLogo}
+                    />
+                </button>
+            </div>
 
             <Suspense fallback={<div>Cargando...</div>}>
                 <ConfirmLogoutDialog 

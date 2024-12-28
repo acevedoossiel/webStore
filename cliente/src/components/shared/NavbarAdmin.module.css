@@ -69,6 +69,14 @@
     overflow: hidden;
     padding: 20px 40px;
     box-sizing: border-box;
+    transform: translateX(-100%);
+    opacity: 0; 
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.menu.open {
+    transform: translateX(0);
+    opacity: 1;
 }
 
 .menu ul {
@@ -221,7 +229,7 @@
 
 .cancelBtn:hover {
     background-color: transparent;
-    color: #0071e3;
+    color: #606060;
 }
 
 .iconLogo {
