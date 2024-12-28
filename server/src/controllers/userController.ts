@@ -91,7 +91,7 @@ class userController {
     }
 
     async validateToken(req: Request, res: Response) {
-        const authToken = req.body.authToken; // Obtener el token del cuerpo de la solicitud
+        const authToken = req.body.authToken;
 
         if (!authToken) {
             return res.status(401).json({ message: "Token no proporcionado" });
@@ -107,21 +107,17 @@ class userController {
     }
 
     async login(req: Request, res: Response) {
+        const { email, password } = req.body;
+
         try {
-            const { email, password } = req.body;
-            if (!email || !password) {
-                return res.status(400).json({ message: "Email and password are required" });
-            }
-            const userData = await UserService.login(email, password);
-            return res.status(200).json({
-                message: "Login successful",
-                user: userData,
-            });
+            const result = await UserService.login(email, password);
+            return res.json(result);
         } catch (error) {
-            console.error("Error while logging in:", error);
-            return res.status(401).json({
-                message: error instanceof Error ? error.message : "Unknown error",
-            });
+            const errorMessage =
+                error instanceof Error ? error.message : 'Error en el servidor';
+            const status = errorMessage === 'Credenciales incorrectas' ? 401 : 500;
+
+            return res.status(status).json({ error: errorMessage });
         }
     }
 

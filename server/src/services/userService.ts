@@ -1,5 +1,7 @@
 import userModel from "../models/userModel";
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { config } from "../config";
 
 class userService {
 
@@ -80,23 +82,25 @@ class userService {
         try {
             const user = await userModel.findOne({ email });
             if (!user) {
-                throw new Error("Invalid email or password");
+                throw new Error('Credenciales incorrectas');
             }
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                throw new Error("Invalid email or password");
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                throw new Error('Credenciales incorrectas');
             }
-            return {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-            };
-        } catch (error) {
-            throw new Error(
-                `Error while logging in: ${error instanceof Error ? error.message : "Unknown error"
-                }`
+
+            const token = jwt.sign(
+                { id: user.id, email: user.email },
+                config.jwtSecret,
+                { expiresIn: '1h' }
             );
+
+            return { token };
+        } catch (error) {
+            const errorMessage = 
+                error instanceof Error ? error.message : 'Error en el servidor';
+            throw new Error(errorMessage);
         }
     }
 }
