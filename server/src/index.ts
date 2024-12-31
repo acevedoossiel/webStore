@@ -7,6 +7,7 @@ import cors from 'cors';
 import RoleRoutes from './routes/roleRoute';
 import UserRoutes from './routes/userRoute';
 import ProductRoutes from './routes/productRoute';
+import SocialRoutes from './routes/socialRoute';
 
 dotenv.config();
 
@@ -32,8 +33,9 @@ class Server {
         this.app.use('/api/roles', RoleRoutes);
         this.app.use('/api/users', UserRoutes);
         this.app.use('/api/products', ProductRoutes);
+        this.app.use('/api/links', SocialRoutes);
     }
-  
+
     start(): void {
         this.app.listen(this.app.get('port'), () => {
             console.log('Server running on port: ', this.app.get('port'));
