@@ -9,6 +9,7 @@ class productService {
         srcImage: boolean;
         price: number;
         capacity: number;
+        flavors?: string[];
     }) {
         try {
             const existingProduct = await productModel.findOne({
@@ -54,6 +55,7 @@ class productService {
         srcImage: boolean;
         price: number;
         capacity: number;
+        flavors?: string[];
     }>) {
         try {
             const updatedProduct = await productModel.findByIdAndUpdate(id, productData, { new: true });
@@ -63,6 +65,38 @@ class productService {
             return updatedProduct;
         } catch (error) {
             throw new Error('Error while updating product');
+        }
+    }
+
+    async addFlavorToProduct(productId: string, flavor: string) {
+        try {
+            const updatedProduct = await productModel.findByIdAndUpdate(
+                productId,
+                { $addToSet: { flavors: flavor } }, // Evita duplicados
+                { new: true }
+            );
+            if (!updatedProduct) {
+                throw new Error('Product not found');
+            }
+            return updatedProduct;
+        } catch (error) {
+            throw new Error(`Error while adding flavor to product`);
+        }
+    }
+
+    async removeFlavorFromProduct(productId: string, flavor: string) {
+        try {
+            const updatedProduct = await productModel.findByIdAndUpdate(
+                productId,
+                { $pull: { flavors: flavor } },
+                { new: true }
+            );
+            if (!updatedProduct) {
+                throw new Error('Product not found');
+            }
+            return updatedProduct;
+        } catch (error) {
+            throw new Error(`Error while removing flavor from product`);
         }
     }
 

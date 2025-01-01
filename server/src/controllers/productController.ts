@@ -4,7 +4,7 @@ import { ProductService } from "../services/productService";
 class productController {
     async createProduct(req: Request, res: Response) {
         try {
-            const { brand, modelo, description, srcImage, price, capacity } = req.body;
+            const { brand, modelo, description, srcImage, price, capacity, flavors } = req.body;
             const newProduct = await ProductService.createProduct({
                 brand,
                 modelo,
@@ -12,6 +12,7 @@ class productController {
                 srcImage,
                 price,
                 capacity,
+                flavors,
             });
             return res.status(201).json(newProduct);
         } catch (error: unknown) {
@@ -73,6 +74,40 @@ class productController {
             });
         } catch (error) {
             return res.status(500).json({ message: `Error while updating product` });
+        }
+    }
+
+    async addFlavor(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { flavor } = req.body;
+            if (!flavor) {
+                return res.status(400).json({ message: 'Flavor is required' });
+            }
+            const updatedProduct = await ProductService.addFlavorToProduct(id, flavor);
+            return res.status(200).json({
+                message: 'Flavor added successfully',
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: `Error while adding flavor to product` });
+        }
+    }
+
+    async removeFlavor(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { flavor } = req.body;
+            if (!flavor) {
+                return res.status(400).json({ message: 'Flavor is required' });
+            }
+            const updatedProduct = await ProductService.removeFlavorFromProduct(id, flavor);
+            return res.status(200).json({
+                message: 'Flavor removed successfully',
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: `Error while removing flavor from product` });
         }
     }
 

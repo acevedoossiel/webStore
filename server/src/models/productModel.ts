@@ -7,6 +7,7 @@ export interface IProduct extends Document {
     srcImage: boolean;
     price: number;
     capacity: number
+    flavors: string[];
 }
 
 const productSchema = new Schema<IProduct>(
@@ -24,7 +25,7 @@ const productSchema = new Schema<IProduct>(
         description: {
             type: String,
             required: true,
-            trim: true 
+            trim: true
         },
         srcImage: {
             type: Boolean,
@@ -38,6 +39,10 @@ const productSchema = new Schema<IProduct>(
             type: Number,
             required: true,
             trim: true,
+        },
+        flavors: {
+            type: [String],
+            default: [],
         },
     },
     {
