@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PiHandbagFill } from "react-icons/pi";
 import { LuMenu } from "react-icons/lu";
@@ -6,6 +6,13 @@ import styles from './Navbar.module.css';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [links, setLinks] = useState({
+    main: '',
+    backup: '',
+    number: ''
+  });
+  
+  const whatsappMessage = 'Hola, quiero más información Nava.';
 
   const toggleMenu = () => {
     setIsMenuOpen(prevState => !prevState);
@@ -15,9 +22,31 @@ function Navbar() {
     setIsMenuOpen(false);
   };
 
-  const phoneNumber = "523334131768";
-  const message = "Hola, quiero más información.";
-  const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  useEffect(() => {
+    const fetchLinks = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/links/get`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los enlaces');
+        }
+        const data = await response.json();
+
+        const mappedLinks = {
+          main: data.find(link => link.link === 'main')?.value || '',
+          backup: data.find(link => link.link === 'backup')?.value || '',
+          number: data.find(link => link.link === 'number')?.value || ''
+        };
+
+        setLinks(mappedLinks);
+      } catch (error) {
+        console.error('Error al obtener los enlaces:', error);
+      }
+    };
+
+    fetchLinks();
+  }, []);
+
+  const whatsappLink = `https://wa.me/52${links.number}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <nav className={styles.navbar}>
@@ -64,11 +93,11 @@ function Navbar() {
             <h1>CONTÁCTANOS:</h1>
           </li>
           <li className={styles.instagramIcon}>
-            <a href="https://www.instagram.com/only.wapes?igsh=MWN3aWx6Mmo1dXZqcg==" target="_blank" rel="noopener noreferrer">
+            <a href={links.main} target="_blank" rel="noopener noreferrer">
               <img src="/assets/images/logos/insta.png" alt="Instagram" />
               <p className={styles.mediaText}>Principal</p>
             </a>
-            <a href="https://www.instagram.com/onlywape.respaldo?igsh=OWMwZXMyeGw2d2Jk&utm_source=qr" target="_blank" rel="noopener noreferrer">
+            <a href={links.backup} target="_blank" rel="noopener noreferrer">
               <img src="/assets/images/logos/insta.png" alt="Instagram" />
               <p className={styles.mediaText}>Respaldo</p>
             </a>
