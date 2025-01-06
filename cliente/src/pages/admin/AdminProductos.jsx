@@ -20,7 +20,7 @@ const AdminProductos = () => {
    flavors: [],
    newFlavor: '',
  });
- const [selectedImage, setSelectedImage] = useState(null);
+ const [setSelectedImage] = useState(null);
 
 
  useEffect(() => {
@@ -108,62 +108,62 @@ const AdminProductos = () => {
  };
 
 
- const handleAddImage = async () => {
-   console.log('Current Product ID antes de enviar:', currentProductId); // Debug
-   if (!selectedImage || !currentProductId) {
-     console.error('No se seleccionó una imagen o el ID del producto no es válido.');
-     return;
-   }
-    const formData = new FormData();
-   formData.append('image', selectedImage);
-    try {
-     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${currentProductId}`, {
-       method: 'POST',
-       body: formData,
-     });
-      if (!response.ok) {
-       throw new Error('Error al agregar la imagen');
-     }
-      const updatedProduct = await response.json();
-     setNewProduct((prev) => ({ ...prev, srcImage: updatedProduct.data.srcImage }));
-     setProducts((prev) =>
-       prev.map((product) =>
-         product._id === updatedProduct.data._id ? updatedProduct.data : product
-       )
-     );
-     console.log("Imagen agregada correctamente al producto:", currentProductId);
-   } catch (error) {
-     console.error('Error al agregar la imagen:', error);
-   }
- };
+//  const handleAddImage = async () => {
+//    console.log('Current Product ID antes de enviar:', currentProductId); // Debug
+//    if (!selectedImage || !currentProductId) {
+//      console.error('No se seleccionó una imagen o el ID del producto no es válido.');
+//      return;
+//    }
+//     const formData = new FormData();
+//    formData.append('image', selectedImage);
+//     try {
+//      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${currentProductId}`, {
+//        method: 'POST',
+//        body: formData,
+//      });
+//       if (!response.ok) {
+//        throw new Error('Error al agregar la imagen');
+//      }
+//       const updatedProduct = await response.json();
+//      setNewProduct((prev) => ({ ...prev, srcImage: updatedProduct.data.srcImage }));
+//      setProducts((prev) =>
+//        prev.map((product) =>
+//          product._id === updatedProduct.data._id ? updatedProduct.data : product
+//        )
+//      );
+//      console.log("Imagen agregada correctamente al producto:", currentProductId);
+//    } catch (error) {
+//      console.error('Error al agregar la imagen:', error);
+//    }
+//  };
  
 
 
- const handleRemoveImage = async (imageUrl) => {
-   try {
-     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/removeImage/${currentProductId}`, {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ imageUrl }),
-     });
+//  const handleRemoveImage = async (imageUrl) => {
+//    try {
+//      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/removeImage/${currentProductId}`, {
+//        method: 'POST',
+//        headers: { 'Content-Type': 'application/json' },
+//        body: JSON.stringify({ imageUrl }),
+//      });
 
 
-     if (!response.ok) {
-       throw new Error('Error al eliminar la imagen');
-     }
+//      if (!response.ok) {
+//        throw new Error('Error al eliminar la imagen');
+//      }
 
 
-     const updatedProduct = await response.json();
-     setNewProduct((prev) => ({ ...prev, srcImage: updatedProduct.data.srcImage }));
-     setProducts((prev) =>
-       prev.map((product) =>
-         product._id === updatedProduct.data._id ? updatedProduct.data : product
-       )
-     );
-   } catch (error) {
-     console.error('Error al eliminar la imagen:', error);
-   }
- };
+//      const updatedProduct = await response.json();
+//      setNewProduct((prev) => ({ ...prev, srcImage: updatedProduct.data.srcImage }));
+//      setProducts((prev) =>
+//        prev.map((product) =>
+//          product._id === updatedProduct.data._id ? updatedProduct.data : product
+//        )
+//      );
+//    } catch (error) {
+//      console.error('Error al eliminar la imagen:', error);
+//    }
+//  };
 
 
  const handleAddProduct = async () => {
