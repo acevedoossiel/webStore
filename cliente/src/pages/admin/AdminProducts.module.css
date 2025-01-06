@@ -178,3 +178,20 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.addImagePlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border: 2px dashed #ccc;
+    color: #666;
+    cursor: pointer;
+    text-align: center;
+}
+
+.addImagePlaceholder:hover {
+    background-color: #f9f9f9;
+    border-color: #999;
+}
