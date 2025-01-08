@@ -8,6 +8,7 @@ import RoleRoutes from './routes/roleRoute';
 import UserRoutes from './routes/userRoute';
 import ProductRoutes from './routes/productRoute';
 import SocialRoutes from './routes/socialRoute';
+import path from 'path';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ class Server {
         this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(express.urlencoded({ extended: false }));
+        this.app.use('/uploads/images', express.static(path.resolve('uploads/images')));
     }
 
     routes(): void {

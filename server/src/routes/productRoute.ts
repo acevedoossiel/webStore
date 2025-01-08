@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ProductController } from '../controllers/productController';
+import imageUpload from '../imagesConfig';
 
 class productRoutes {
     public router: Router = Router();
@@ -14,6 +15,9 @@ class productRoutes {
         this.router.delete('/delete/:id', ProductController.deleteProductById);
         this.router.post('/addFlavor/:id', ProductController.addFlavor);
         this.router.post('/removeFlavor/:id', ProductController.removeFlavor);
+        this.router.post('/addImage/:id', imageUpload.single('image'), ProductController.addImage);
+        this.router.post('/removeImage/:id', ProductController.removeImage);
+        this.router.post('/replaceImage/:id', imageUpload.single('image'), ProductController.replaceImage);
     }
 }
 const ProductRoutes = new productRoutes();

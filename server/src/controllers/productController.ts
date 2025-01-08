@@ -9,7 +9,7 @@ class productController {
                 brand,
                 modelo,
                 description,
-                srcImage,
+                srcImage: srcImage || [],
                 price,
                 capacity,
                 flavors,
@@ -61,9 +61,15 @@ class productController {
         try {
             const { id } = req.params;
             const productData = req.body;
+
             if (!productData || Object.keys(productData).length === 0) {
                 return res.status(400).json({ message: 'No data provided for update' });
             }
+
+            if (productData.srcImage && (!Array.isArray(productData.srcImage) || productData.srcImage.length === 0)) {
+                return res.status(400).json({ message: 'At least one image is required' });
+            }
+
             const updatedProduct = await ProductService.updateProductById(id, productData);
             if (!updatedProduct) {
                 return res.status(404).json({ message: 'Product not found' });
@@ -76,6 +82,85 @@ class productController {
             return res.status(500).json({ message: `Error while updating product` });
         }
     }
+
+    async addImage(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+
+            // Determina la nueva URL de la imagen
+            const imageUrl = req.file
+                ? `/uploads/images/${req.file.filename}` // Si se subió un archivo
+                : req.body.imageUrl; // Si se proporcionó una URL en el cuerpo
+
+            if (!imageUrl) {
+                return res.status(400).json({ message: 'Image URL or file is required' });
+            }
+
+            // Llama al servicio para agregar la imagen
+            const updatedProduct = await ProductService.addImageToProduct(id, imageUrl);
+
+            return res.status(200).json({
+                message: 'Image added successfully',
+                data: updatedProduct,
+            });
+        } catch (error) {
+            console.error('Error while adding image:', error);
+            return res.status(500).json({ message: `Error while adding image to product` });
+        }
+    }
+
+
+    async removeImage(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { imageUrl } = req.body;
+
+            if (!imageUrl) {
+                return res.status(400).json({ message: 'Image URL is required' });
+            }
+
+            const updatedProduct = await ProductService.removeImageFromProduct(id, imageUrl);
+            return res.status(200).json({
+                message: 'Image removed successfully',
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: `Error while removing image from product` });
+        }
+    }
+
+    async replaceImage(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { oldImageUrl } = req.body;
+
+            if (!oldImageUrl) {
+                return res.status(400).json({ message: 'Old image URL is required' });
+            }
+
+            // Determina la nueva URL de la imagen
+            const newImageUrl = req.file
+                ? `/uploads/images/${req.file.filename}` // Si se subió un archivo
+                : req.body.newImageUrl; // Si se proporcionó una URL en el cuerpo
+
+            if (!newImageUrl) {
+                return res.status(400).json({ message: 'New image URL is required' });
+            }
+
+            // Llama al servicio para reemplazar la imagen
+            const updatedProduct = await ProductService.replaceImageInProduct(id, oldImageUrl, newImageUrl);
+
+            return res.status(200).json({
+                message: 'Image replaced successfully',
+                data: updatedProduct,
+            });
+        } catch (error) {
+            console.error('Error while replacing image:', error);
+            return res.status(500).json({ message: `Error while replacing image in product` });
+        }
+    }
+
+
 
     async addFlavor(req: Request, res: Response) {
         try {

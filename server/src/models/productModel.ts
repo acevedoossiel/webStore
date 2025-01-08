@@ -4,7 +4,7 @@ export interface IProduct extends Document {
     brand: string;
     modelo: string;
     description: string;
-    srcImage: boolean;
+    srcImage: string[];
     price: number;
     capacity: number
     flavors: string[];
@@ -28,7 +28,9 @@ const productSchema = new Schema<IProduct>(
             trim: true
         },
         srcImage: {
-            type: Boolean,
+            type: [String],
+            required: false,
+            default: [],
         },
         price: {
             type: Number,
