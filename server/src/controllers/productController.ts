@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ProductService } from "../services/productService";
-
+import fs from 'fs';
+import path from 'path';
 class productController {
     async createProduct(req: Request, res: Response) {
         try {
@@ -86,21 +87,33 @@ class productController {
     async addImage(req: Request, res: Response) {
         try {
             const { id } = req.params;
+            console.log('Product ID:', id);
+            console.log('File:', req.file);
 
-            // Determina la nueva URL de la imagen
-            const imageUrl = req.file
-                ? `/uploads/images/${req.file.filename}` // Si se subió un archivo
-                : req.body.imageUrl; // Si se proporcionó una URL en el cuerpo
+            if (!req.file) {
+                console.error('No se ha proporcionado una imagen');
+                return res.status(400).json({ message: 'No se ha proporcionado una imagen' });
+            }
+
+            const filename = req.file.filename;
+            console.log('Filename:', filename);
+
+            const imageUrl = `/uploads/images/${filename}`;
+
+            console.log('Image URL:', imageUrl);
 
             if (!imageUrl) {
                 return res.status(400).json({ message: 'Image URL or file is required' });
             }
 
-            // Llama al servicio para agregar la imagen
-            const updatedProduct = await ProductService.addImageToProduct(id, imageUrl);
+            // Asegurémonos de que la URL no tenga duplicados antes de guardarla
+            const cleanedImageUrl = imageUrl.replace(/\/uploads\/images\/uploads\/images\//, "/uploads/images/");
+
+            const updatedProduct = await ProductService.addImageToProduct(id, cleanedImageUrl);
+            console.log('Updated Product:', updatedProduct);
 
             return res.status(200).json({
-                message: 'Image added successfully',
+                message: 'Imagen agregada correctamente',
                 data: updatedProduct,
             });
         } catch (error) {
@@ -119,12 +132,28 @@ class productController {
                 return res.status(400).json({ message: 'Image URL is required' });
             }
 
+            // Primero, eliminar la URL de la imagen del producto en la base de datos
             const updatedProduct = await ProductService.removeImageFromProduct(id, imageUrl);
-            return res.status(200).json({
-                message: 'Image removed successfully',
-                data: updatedProduct,
+
+            if (!updatedProduct) {
+                throw new Error('Product not found');
+            }
+
+            // Luego, eliminar el archivo de imagen físicamente del servidor
+            const filePath = path.resolve(`.${imageUrl}`);
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error al eliminar la imagen del servidor:', err);
+                    return res.status(500).json({ message: 'Error al eliminar la imagen del servidor', err });
+                }
+
+                return res.status(200).json({
+                    message: 'Imagen eliminada correctamente',
+                    data: updatedProduct,
+                });
             });
         } catch (error) {
+            console.error('Error al eliminar la imagen del producto:', error);
             return res.status(500).json({ message: `Error while removing image from product` });
         }
     }

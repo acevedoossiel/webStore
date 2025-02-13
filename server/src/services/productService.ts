@@ -59,30 +59,33 @@ class productService {
         brand: string;
         modelo: string;
         description: string;
-        srcImage: string[];
+        srcImage?: string[]; // srcImage ahora es opcional
         price: number;
         capacity: number;
         flavors?: string[];
     }>) {
         try {
+            // Solo validamos si se incluyen nuevas imágenes
             if (productData.srcImage && productData.srcImage.length === 0) {
                 throw new Error('At least one image is required for the product');
             }
-
+    
             const updatedProduct = await productModel.findByIdAndUpdate(id, productData, { new: true });
             if (!updatedProduct) {
                 throw new Error('Product not found');
             }
             return updatedProduct;
         } catch (error) {
-            throw new Error('Error while updating product');
+            throw new Error(`Error while updating product: .message}`);
         }
     }
+    
 
-    async addImageToProduct(productId: string, file: Express.Multer.File) {
+    async addImageToProduct(productId: string, filename: string) {
         try {
             // Generar la URL basada en la ubicación del archivo
-            const imageUrl = `/uploads/images/${file.filename}`;
+            const imageUrl = filename;
+            console.log('Service Image URL:', imageUrl);
 
             // Agregar la URL a la base de datos
             const updatedProduct = await productModel.findByIdAndUpdate(
@@ -97,14 +100,13 @@ class productService {
 
             return updatedProduct;
         } catch (error) {
-            throw new Error(`Error while adding image to product`);
+            console.error('Error al agregar la imagen al producto:', error);
+            throw error;
         }
     }
 
-
     async removeImageFromProduct(productId: string, imageUrl: string) {
         try {
-            // Eliminar la referencia en la base de datos
             const updatedProduct = await productModel.findByIdAndUpdate(
                 productId,
                 { $pull: { srcImage: imageUrl } },
@@ -115,15 +117,10 @@ class productService {
                 throw new Error('Product not found');
             }
 
-            // Eliminar el archivo físico
-            const filePath = path.resolve('uploads/images', path.basename(imageUrl));
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath); // Borra el archivo del servidor
-            }
-
             return updatedProduct;
         } catch (error) {
-            throw new Error(`Error while removing image from product: ${error}`);
+            console.error('Error al eliminar la imagen del producto:', error);
+            throw error;
         }
     }
 
