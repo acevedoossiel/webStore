@@ -22,7 +22,8 @@ const [newProduct, setNewProduct] = useState({
   flavors: [],
   newFlavor: '',
 });
-const [setSelectedImage] = useState(null);
+const [selectedImage, setSelectedImage] = useState(null);
+
 
 
 
@@ -104,123 +105,114 @@ const handleInputChange = (e) => {
 
 
 
-const handleTemporaryImageAdd = (file) => {
-  const tempImageUrl = URL.createObjectURL(file);
-  setNewProduct((prev) => ({
-    ...prev,
-    srcImage: [...prev.srcImage, tempImageUrl],
-  }));
-};
+// const handleTemporaryImageAdd = (file) => {
+//   const tempImageUrl = URL.createObjectURL(file);
+//   setNewProduct((prev) => ({
+//     ...prev,
+//     srcImage: [...prev.srcImage, tempImageUrl],
+//   }));
+// };
 
 
 
 
-const handleFileChange = (e) => {
+// const handleFileChange = (e) => {
+//   const file = e.target.files[0];
+//   if (file) {
+//     handleTemporaryImageAdd(file);
+//     setSelectedImage(file); // Mantiene la última imagen seleccionada para subirla al servidor después
+//   }
+// };
+
+const handleFileChange = async (e) => {
   const file = e.target.files[0];
-  if (file) {
-    handleTemporaryImageAdd(file);
-    setSelectedImage(file); // Mantiene la última imagen seleccionada para subirla al servidor después
+  if (!file || !editMode) return; // Solo permitir subir imágenes en edición
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${currentProductId}`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) throw new Error("Error al subir la imagen");
+
+    const data = await response.json();
+    console.log("✅ Imagen subida correctamente:", data.data.srcImage);
+
+    // Actualizar `srcImage` con la URL real del servidor
+    setNewProduct((prev) => ({
+      ...prev,
+      srcImage: data.data.srcImage, // El backend devuelve la lista completa de imágenes
+    }));
+
+  } catch (error) {
+    console.error("❌ Error al subir la imagen:", error);
   }
 };
 
 
 
 
-//  const handleAddImage = async () => {
-//    console.log('Current Product ID antes de enviar:', currentProductId); // Debug
-//    if (!selectedImage || !currentProductId) {
-//      console.error('No se seleccionó una imagen o el ID del producto no es válido.');
-//      return;
-//    }
-//     const formData = new FormData();
-//    formData.append('image', selectedImage);
-//     try {
-//      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${currentProductId}`, {
-//        method: 'POST',
-//        body: formData,
-//      });
-//       if (!response.ok) {
-//        throw new Error('Error al agregar la imagen');
-//      }
-//       const updatedProduct = await response.json();
-//      setNewProduct((prev) => ({ ...prev, srcImage: updatedProduct.data.srcImage }));
-//      setProducts((prev) =>
-//        prev.map((product) =>
-//          product._id === updatedProduct.data._id ? updatedProduct.data : product
-//        )
-//      );
-//      console.log("Imagen agregada correctamente al producto:", currentProductId);
-//    } catch (error) {
-//      console.error('Error al agregar la imagen:', error);
-//    }
-//  };
 
-
-
-
-//  const handleRemoveImage = async (imageUrl) => {
-//    try {
-//      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/removeImage/${currentProductId}`, {
-//        method: 'POST',
-//        headers: { 'Content-Type': 'application/json' },
-//        body: JSON.stringify({ imageUrl }),
-//      });
-
-
-
-
+// const handleAddProduct = async () => {
+//   try {
+//     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ ...newProduct, srcImage: [] }), // Crea el producto sin imágenes inicialmente
+//     });
 //      if (!response.ok) {
-//        throw new Error('Error al eliminar la imagen');
-//      }
-
-
-
-
-//      const updatedProduct = await response.json();
-//      setNewProduct((prev) => ({ ...prev, srcImage: updatedProduct.data.srcImage }));
-//      setProducts((prev) =>
-//        prev.map((product) =>
-//          product._id === updatedProduct.data._id ? updatedProduct.data : product
-//        )
-//      );
-//    } catch (error) {
-//      console.error('Error al eliminar la imagen:', error);
-//    }
-//  };
-
-
-
+//       throw new Error('Error al agregar el producto');
+//     }
+//      const addedProduct = await response.json();
+//      // Subir las imágenes seleccionadas temporalmente
+//     for (const tempImage of newProduct.srcImage) {
+//       const formData = new FormData();
+//       formData.append('image', tempImage);
+//       await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${addedProduct._id}`, {
+//         method: 'POST',
+//         body: formData,
+//       });
+//     }
+//      // Actualiza la lista de productos
+//     const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/get`);
+//     const updatedProducts = await updatedResponse.json();
+//     setProducts(updatedProducts);
+//      toggleModal();
+//   } catch (error) {
+//     console.error('Error al agregar el producto:', error);
+//   }
+// };
 
 const handleAddProduct = async () => {
   try {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...newProduct, srcImage: [] }), // Crea el producto sin imágenes inicialmente
+      body: JSON.stringify({ ...newProduct, srcImage: [] }), // Crea el producto sin imágenes
     });
-     if (!response.ok) {
+
+    if (!response.ok) {
       throw new Error('Error al agregar el producto');
     }
-     const addedProduct = await response.json();
-     // Subir las imágenes seleccionadas temporalmente
-    for (const tempImage of newProduct.srcImage) {
-      const formData = new FormData();
-      formData.append('image', tempImage);
-      await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${addedProduct._id}`, {
-        method: 'POST',
-        body: formData,
-      });
-    }
-     // Actualiza la lista de productos
+
+    //const addedProduct = await response.json();
+
+    // No subir imágenes aquí, ya que ahora se agregan después en el modo edición.
+
+    // Actualizar la lista de productos
     const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/get`);
     const updatedProducts = await updatedResponse.json();
     setProducts(updatedProducts);
-     toggleModal();
+
+    toggleModal();
   } catch (error) {
     console.error('Error al agregar el producto:', error);
   }
 };
-
 
 
 
@@ -232,29 +224,17 @@ const handleEditProduct = async () => {
       body: JSON.stringify(newProduct),
     });
 
-
-
-
     if (!response.ok) {
       throw new Error('Error al editar el producto');
     }
-
-
-
 
     const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/get`);
     if (!updatedResponse.ok) {
       throw new Error('Error al obtener los productos actualizados');
     }
 
-
-
-
     const updatedProducts = await updatedResponse.json();
     setProducts(updatedProducts);
-
-
-
 
     toggleModal();
   } catch (error) {
@@ -263,31 +243,20 @@ const handleEditProduct = async () => {
 };
 
 
-
-
 const handleDeleteProduct = async () => {
   try {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/delete/${productToDelete}`, {
       method: 'DELETE',
     });
 
-
-
-
     if (!response.ok) {
       throw new Error('Error al eliminar el producto');
     }
-
-
-
 
     const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/get`);
     if (!updatedResponse.ok) {
       throw new Error('Error al obtener los productos actualizados');
     }
-
-
-
 
     const updatedProducts = await updatedResponse.json();
     setProducts(updatedProducts);
@@ -300,15 +269,66 @@ const handleDeleteProduct = async () => {
 
 
 
+// const renderProducts = () => {
+//   return products.map((product) => (
+//     <div key={product._id} className={styles.productItem}>
+//       <div className={styles.productImageContainer}>
+//         {product.srcImage && product.srcImage.length > 0 ? (
+//           product.srcImage.map((image, index) => (
+//             <img
+//               key={index}
+//               src={image}
+//               alt={`${product.brand} - ${product.modelo}`}
+//               className={styles.productImage}
+//             />
+//           ))
+//         ) : (
+//           <img
+//             src="/assets/images/default.png"
+//             alt="Imagen por defecto"
+//             className={styles.productImage}
+//           />
+//         )}
+//       </div>
+//       <div className={styles.productInfo}>
+//         <h3>{product.brand} - {product.modelo}</h3>
+//         <p>{product.description}</p>
+//         <p>Precio: ${product.price}</p>
+//         <p>Capacidad: {product.capacity} puffs</p>
+//         <p>Sabores: {Array.isArray(product.flavors) && product.flavors.length > 0
+//           ? product.flavors.join(', ')
+//           : 'Sin sabores'}</p>
+//       </div>
+//       <div className={styles.actions}>
+// <button
+//   className={styles.editBtn}
+//   onClick={() => {
+//     console.log('Producto seleccionado para editar:', product); // Debug
+//     toggleModal(product);
+//   }}
+// >
+//   <MdEdit size={20} />
+// </button>
+// <button
+//   className={styles.deleteBtn}
+//   onClick={() => toggleDeleteModal(product._id)}
+// >
+//   <MdDelete size={20} />
+// </button>
+// </div>
+//     </div>
+//   ));
+// };
+
 const renderProducts = () => {
   return products.map((product) => (
     <div key={product._id} className={styles.productItem}>
       <div className={styles.productImageContainer}>
-        {product.srcImage && product.srcImage.length > 0 ? (
+      {Array.isArray(product.srcImage) && product.srcImage.length > 0 ? (
           product.srcImage.map((image, index) => (
             <img
               key={index}
-              src={image}
+              src={`${process.env.REACT_APP_API_URL}${image}`} // Agregar la URL base del backend
               alt={`${product.brand} - ${product.modelo}`}
               className={styles.productImage}
             />
@@ -331,26 +351,25 @@ const renderProducts = () => {
           : 'Sin sabores'}</p>
       </div>
       <div className={styles.actions}>
-<button
-  className={styles.editBtn}
-  onClick={() => {
-    console.log('Producto seleccionado para editar:', product); // Debug
-    toggleModal(product);
-  }}
->
-  <MdEdit size={20} />
-</button>
-<button
-  className={styles.deleteBtn}
-  onClick={() => toggleDeleteModal(product._id)}
->
-  <MdDelete size={20} />
-</button>
-</div>
+        <button
+          className={styles.editBtn}
+          onClick={() => {
+            console.log('Producto seleccionado para editar:', product); // Debug
+            toggleModal(product);
+          }}
+        >
+          <MdEdit size={20} />
+        </button>
+        <button
+          className={styles.deleteBtn}
+          onClick={() => toggleDeleteModal(product._id)}
+        >
+          <MdDelete size={20} />
+        </button>
+      </div>
     </div>
   ));
 };
-
 
 
 
@@ -365,9 +384,7 @@ return (
     </div>
 
 
-
-
-    {isModalOpen && (
+{isModalOpen && (
       <div className={styles.modal}>
         <div className={styles.modalContent}>
           <h2>{editMode ? 'Editar Producto' : 'Agregar Producto'}</h2>
@@ -406,39 +423,43 @@ return (
             onChange={handleInputChange}
           />
 
-
-
-
-          <div className={styles.imageContainer}>
-            <h3>Imágenes</h3>
-            <ul>
-              {newProduct.srcImage.map((image, index) => (
-                <li key={index}>
-                  <img src={image} alt={`Imagen ${index + 1}`} className={styles.productImage} />
-                  <button
-                    onClick={() =>
-                      setNewProduct((prev) => ({
-                        ...prev,
-                        srcImage: prev.srcImage.filter((_, i) => i !== index),
-                      }))
-                    }
-                    className={styles.deleteFlavorBtn}
-                  >
-                    Eliminar
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <input
-              type="file"
-              name="image"
-              onChange={handleFileChange}
-              accept="image/*"
-            />
-          </div>
-
-
-
+          {editMode && (
+            <div className={styles.imageContainer}>
+              <h3>Imágenes</h3>
+              <ul>
+                {newProduct.srcImage.map((image, index) => (
+                  <li key={index}>
+                    <img
+                    src={`${process.env.REACT_APP_API_URL}${image}`} // Agregar la URL base
+                    alt={`Imagen ${index + 1}`}
+                    className={styles.productImage}
+                    onError={(e) => {
+                      console.error(`❌ Error cargando imagen: ${image}`, e);
+                      e.target.src = "/assets/images/default.png"; // Imagen por defecto en caso de error
+                    }}
+                  />
+                    <button
+                      onClick={() =>
+                        setNewProduct((prev) => ({
+                          ...prev,
+                          srcImage: prev.srcImage.filter((_, i) => i !== index),
+                        }))
+                      }
+                      className={styles.deleteFlavorBtn}
+                    >
+                      Eliminar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <input
+                type="file"
+                name="image"
+                onChange={handleFileChange}
+                accept="image/*"
+              />
+            </div>
+          )}
 
           <div className={styles.flavorsContainer}>
             <h3>Sabores</h3>
@@ -490,9 +511,6 @@ return (
             </button>
           </div>
 
-
-
-
           <div className={styles.modalActions}>
             <button
               className={styles.confirmBtn}
@@ -507,8 +525,6 @@ return (
         </div>
       </div>
     )}
-
-
 
 
     {deleteModalOpen && (
@@ -530,8 +546,6 @@ return (
   </div>
 );
 };
-
-
 
 
 export default AdminProductos;

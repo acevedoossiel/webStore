@@ -78,7 +78,14 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+
+    /* 📌 Solución para el scroll interno */
+    max-height: 80vh;
+    /* Limita la altura máxima al 80% de la pantalla */
+    overflow-y: auto;
+    /* Permite desplazamiento vertical si el contenido es grande */
 }
+
 
 
 .modalContent input,
