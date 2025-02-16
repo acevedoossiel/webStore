@@ -65,9 +65,9 @@ class productService {
         flavors?: string[];
     }>) {
         try {
-            if (productData.srcImage && productData.srcImage.length === 0) {
-                throw new Error('At least one image is required for the product');
-            }
+            // if (productData.srcImage && productData.srcImage.length === 0) {
+            //     throw new Error('At least one image is required for the product');
+            // }
 
             const updatedProduct = await productModel.findByIdAndUpdate(id, productData, { new: true });
             if (!updatedProduct) {
@@ -79,12 +79,35 @@ class productService {
         }
     }
 
-    async addImageToProduct(productId: string, file: Express.Multer.File) {
-        try {
-            // Generar la URL basada en la ubicación del archivo
-            const imageUrl = `/uploads/images/${file.filename}`;
+    // async addImageToProduct(productId: string, file: Express.Multer.File) {
+    //     try {
+    //         // Generar la URL basada en la ubicación del archivo
+    //         const imageUrl = `/uploads/images/${file.filename}`;
 
-            // Agregar la URL a la base de datos
+    //         // Agregar la URL a la base de datos
+    //         const updatedProduct = await productModel.findByIdAndUpdate(
+    //             productId,
+    //             { $addToSet: { srcImage: imageUrl } },
+    //             { new: true }
+    //         );
+
+    //         if (!updatedProduct) {
+    //             throw new Error('Product not found');
+    //         }
+
+    //         return updatedProduct;
+    //     } catch (error) {
+    //         throw new Error(`Error while adding image to product`);
+    //     }
+    // }
+
+    async addImageToProduct(productId: string, imageUrl: string) {
+        try {
+            if (!imageUrl) {
+                throw new Error("❌ Error: La URL de la imagen es undefined.");
+            }
+
+            // Agregar la URL de la imagen al array `srcImage` en MongoDB
             const updatedProduct = await productModel.findByIdAndUpdate(
                 productId,
                 { $addToSet: { srcImage: imageUrl } },
@@ -92,14 +115,15 @@ class productService {
             );
 
             if (!updatedProduct) {
-                throw new Error('Product not found');
+                throw new Error("❌ Error: Producto no encontrado.");
             }
 
             return updatedProduct;
         } catch (error) {
-            throw new Error(`Error while adding image to product`);
+            throw new Error("❌ Error while adding image to product");
         }
     }
+
 
 
     async removeImageFromProduct(productId: string, imageUrl: string) {

@@ -66,9 +66,9 @@ class productController {
                 return res.status(400).json({ message: 'No data provided for update' });
             }
 
-            if (productData.srcImage && (!Array.isArray(productData.srcImage) || productData.srcImage.length === 0)) {
-                return res.status(400).json({ message: 'At least one image is required' });
-            }
+            // if (productData.srcImage && (!Array.isArray(productData.srcImage) || productData.srcImage.length === 0)) {
+            //     return res.status(400).json({ message: 'At least one image is required' });
+            // }
 
             const updatedProduct = await ProductService.updateProductById(id, productData);
             if (!updatedProduct) {
@@ -83,31 +83,62 @@ class productController {
         }
     }
 
+    // async addImage(req: Request, res: Response) {
+    //     try {
+    //         const { id } = req.params;
+
+    //         // Determina la nueva URL de la imagen
+    //         const imageUrl = req.file
+    //             ? `/uploads/images/${req.file.filename}` // Si se subió un archivo
+    //             : req.body.imageUrl; // Si se proporcionó una URL en el cuerpo
+
+    //         if (!imageUrl) {
+    //             return res.status(400).json({ message: 'Image URL or file is required' });
+    //         }
+
+    //         // Llama al servicio para agregar la imagen
+    //         const updatedProduct = await ProductService.addImageToProduct(id, imageUrl);
+
+    //         return res.status(200).json({
+    //             message: 'Image added successfully',
+    //             data: updatedProduct,
+    //         });
+    //     } catch (error) {
+    //         console.error('Error while adding image:', error);
+    //         return res.status(500).json({ message: `Error while adding image to product` });
+    //     }
+    // }
+
     async addImage(req: Request, res: Response) {
         try {
             const { id } = req.params;
 
-            // Determina la nueva URL de la imagen
-            const imageUrl = req.file
-                ? `/uploads/images/${req.file.filename}` // Si se subió un archivo
-                : req.body.imageUrl; // Si se proporcionó una URL en el cuerpo
+            console.log("📌 ID del producto recibido:", id);
+            console.log("📌 Archivo recibido:", req.file);
 
-            if (!imageUrl) {
-                return res.status(400).json({ message: 'Image URL or file is required' });
+            if (!req.file || !req.file.filename) {
+                return res.status(400).json({ message: "❌ No se recibió un archivo válido." });
             }
 
-            // Llama al servicio para agregar la imagen
+            // Generar la URL correctamente
+            const imageUrl = `/uploads/images/${req.file.filename}`;
+            console.log("📌 URL generada para la imagen:", imageUrl);
+
+            // Llamar al servicio con la URL en lugar del archivo
             const updatedProduct = await ProductService.addImageToProduct(id, imageUrl);
 
+            console.log("✅ Producto actualizado con nueva imagen:", updatedProduct);
+
             return res.status(200).json({
-                message: 'Image added successfully',
+                message: "✅ Imagen agregada correctamente",
                 data: updatedProduct,
             });
         } catch (error) {
-            console.error('Error while adding image:', error);
-            return res.status(500).json({ message: `Error while adding image to product` });
+            console.error("❌ Error al agregar la imagen:", error);
+            return res.status(500).json({ message: "Error while adding image to product" });
         }
     }
+
 
 
     async removeImage(req: Request, res: Response) {
