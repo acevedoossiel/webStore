@@ -20,7 +20,7 @@
     background-color: #0D99FF;
     position: relative;
     overflow: hidden;
-    display: block;
+    display: contents;
     height: 600px;
   }
   
@@ -29,7 +29,6 @@
     height: auto;
     object-fit: contain;
     object-position: center;
-    max-height: 500px; /* Establecemos un alto máximo */
   }
   
   /* Responsividad */
@@ -41,7 +40,7 @@
     .carousel-image2 {
       width: 100%;
       height: auto;
-      max-height: 300px; /* Ajustamos el alto máximo para pantallas más pequeñas */
+
     }
   }
   
@@ -53,7 +52,7 @@
     .carousel-image2 {
       width: 100%;
       height: auto;
-      max-height: 200px; /* Ajustamos el alto máximo para pantallas aún más pequeñas */
+
     }
   }
   
