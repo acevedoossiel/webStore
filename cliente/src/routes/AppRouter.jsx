@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainLayout from '../components/layouts/MainLayout';
 import Home from '../pages/Home';
 import About from '../pages/About';
-import RoleRoutes from './roleRoutes';
+import Category from '../pages/Category'; 
+import ProductDetail from '../pages/ProductDetail';
 
 const AppRouter = () => {
   return (
@@ -12,7 +13,8 @@ const AppRouter = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/roles/*" element={<RoleRoutes />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/category" element={<Category />} />
         </Routes>
       </MainLayout>
     </Router>
