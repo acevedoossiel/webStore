@@ -18,6 +18,7 @@ class productRoutes {
         this.router.post('/addImage/:id', imageUpload.single('image'), ProductController.addImage);
         this.router.post('/removeImage/:id', ProductController.removeImage);
         this.router.post('/replaceImage/:id', imageUpload.single('image'), ProductController.replaceImage);
+        this.router.get('/latest', ProductController.getLatestProducts);
     }
 }
 const ProductRoutes = new productRoutes();

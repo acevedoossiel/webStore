@@ -78,7 +78,7 @@ function Navbar() {
             <Link to="/" onClick={closeMenu}>HOME</Link>
           </li>
           <li>
-            <Link to="/catalogo" onClick={closeMenu}>CATÁLOGO</Link>
+            <Link to="/category" onClick={closeMenu}>CATÁLOGO</Link>
           </li>
           <li>
             <Link to="/promociones" onClick={closeMenu}>PROMOCIONES</Link>

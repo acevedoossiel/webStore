@@ -1,0 +1,94 @@
+.productDetailContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .productDetail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  /* Carrusel */
+  .imageContainer {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .swiperContainer {
+    width: 100%;
+    border-radius: 10px;
+  }
+  
+  .productImage {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  /* Modal para la imagen ampliada */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modalContent img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+  }
+  
+  /* Información del producto */
+  .productInfo {
+    text-align: center;
+  }
+  
+  .price {
+    font-size: 22px;
+    color: #018BD5;
+    font-weight: bold;
+  }
+  
+  .description {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  /* Sabores en escalera */
+  .flavorsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .flavor {
+    padding: 10px 15px;
+    border-radius: 30px;
+    background: #018BD5;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .flavorLeft {
+    transform: translateX(-10px);
+  }
+  
+  .flavorRight {
+    transform: translateX(10px);
+  }
+  

@@ -1,3 +1,4 @@
+import { log } from "console";
 import productModel from "../models/productModel";
 import fs from 'fs';
 import path from 'path';
@@ -240,6 +241,18 @@ class productService {
             throw new Error('Error while deleting product by id');
         }
     }
+
+    async getLatestProducts() {
+        try {
+            // Realizamos la consulta para obtener los tres productos más recientes
+            const latestProducts = await productModel.find().sort({ createdAt: -1 }).limit(3);
+            return latestProducts;
+        } catch (error) {
+            console.error("Error while getting latest products from DB:", error);
+            throw new Error("Error fetching latest products");
+        }
+    }
+
 }
 
 export const ProductService = new productService();

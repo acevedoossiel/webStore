@@ -239,6 +239,18 @@ class productController {
             return res.status(500).json({ message: `Error while deleting product` });
         }
     }
+
+    // Método para obtener los últimos tres productos añadidos
+    async getLatestProducts(req: Request, res: Response) {
+        try {
+            const latestProducts = await ProductService.getLatestProducts();
+            return res.status(200).json(latestProducts);
+        } catch (error) {
+            console.error("Error while getting latest products:", error);
+            return res.status(500).json({ message: "Error while getting latest products" });
+        }
+    }
+
 }
 
 export const ProductController = new productController();

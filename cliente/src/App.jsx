@@ -8,6 +8,8 @@ import AdminRoutes from './routes/AdminRoutes';
 import Login from './pages/admin/Login';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Cookies from 'js-cookie';
+import Category from './pages/Category';
+import ProductDetail from './pages/ProductDetail';
 
 const AppContent = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -50,6 +52,8 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="roles" element={<Role />} />
+          <Route path="category" element={<Category />} />
+          <Route path="product/:id" element={<ProductDetail />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route

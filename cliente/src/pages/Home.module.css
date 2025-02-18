@@ -1,0 +1,134 @@
+/* Primer carrusel */
+.carousel-container {
+    width: 90%; /* Hacemos que el tamaño sea más pequeño */
+    overflow: hidden; /* Hace que las imágenes no sobresalgan del contenedor */
+    margin: 0 auto;
+    position: relative; /* Necesario para posicionar los controles de navegación */
+  }
+  
+  .carousel-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover; 
+    object-position: center center;
+  }
+  
+/* Segundo carrusel */
+.second-carousel-container {
+    width: 90%;
+    margin: 0 auto;
+    background-color: #0D99FF;
+    position: relative;
+    overflow: hidden;
+    display: contents;
+    height: 600px;
+  }
+  
+  .carousel-image2 {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .second-carousel-container {
+      height: 350px;
+    }
+  
+    .carousel-image2 {
+      width: 100%;
+      height: auto;
+
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .second-carousel-container {
+      height: 250px;
+    }
+  
+    .carousel-image2 {
+      width: 100%;
+      height: auto;
+
+    }
+  }
+  
+  .contenido {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #ffffff; /* Fondo blanco */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    padding: 20px; /* Espaciado alrededor del contenedor */
+  }
+  
+  .contenido .header {
+    display: flex; /* Alinea los elementos en una fila */
+    justify-content: space-between; /* Espacia los elementos (Lo nuevo y el enlace) */
+    align-items: center; /* Alinea verticalmente los elementos */
+  }
+  
+  .contenido p {
+    color: #1E1E1E; /* Color del texto */
+    font-size: 24px; /* Aumenta el tamaño del texto */
+  }
+  
+  .contenido a {
+    color: #F24822; /* Color del enlace */
+    text-decoration: none; /* Quitar subrayado */
+    font-weight: bold; /* Hacerlo negrita */
+    font-size: 18px; /* Tamaño del texto */
+    transition: color 0.3s ease; /* Transición suave para el color */
+  }
+  
+  .contenido a:hover {
+    color: #D43B1B; /* Color del enlace al pasar el ratón */
+  }
+  
+  .latest-products-container {
+    display: flex;
+    justify-content: flex-start; /* Alinea los productos al inicio */
+    flex-wrap: nowrap; /* Evita que los productos se acomoden en varias filas */
+    overflow-x: auto; /* Activa el desplazamiento horizontal */
+    padding: 10px 0; /* Espaciado arriba y abajo */
+    gap: 20px; /* Espacio entre las tarjetas de los productos */
+    margin-top: 20px; /* Espaciado superior */
+  }
+  
+  .product-card {
+    flex: 0 0 auto; /* Evita que los productos se estiren o encojan */
+    width: 250px; /* Puedes ajustar el tamaño de las tarjetas */
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .product-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .product-card h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .product-card p {
+    margin: 5px 0;
+    color: #F24822;
+    font-weight: bold;
+  }
+  
