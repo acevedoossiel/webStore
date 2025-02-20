@@ -22,7 +22,6 @@ const [newProduct, setNewProduct] = useState({
   flavors: [],
   newFlavor: '',
 });
-const [selectedImage, setSelectedImage] = useState(null);
 
 
 
@@ -50,7 +49,6 @@ useEffect(() => {
 const toggleModal = (product = null) => {
   if (!isModalOpen) {
     if (product) {
-      console.log('Asignando producto a editar:', product); // Debug
       setNewProduct({
         brand: product.brand,
         modelo: product.modelo,
@@ -78,7 +76,6 @@ const toggleModal = (product = null) => {
       setCurrentProductId(null);
     }
   }
-  console.log('Estado del Modal:', !isModalOpen); // Debug
   setIsModalOpen(!isModalOpen);
 };
 
@@ -103,27 +100,6 @@ const handleInputChange = (e) => {
 };
 
 
-
-
-// const handleTemporaryImageAdd = (file) => {
-//   const tempImageUrl = URL.createObjectURL(file);
-//   setNewProduct((prev) => ({
-//     ...prev,
-//     srcImage: [...prev.srcImage, tempImageUrl],
-//   }));
-// };
-
-
-
-
-// const handleFileChange = (e) => {
-//   const file = e.target.files[0];
-//   if (file) {
-//     handleTemporaryImageAdd(file);
-//     setSelectedImage(file); // Mantiene la última imagen seleccionada para subirla al servidor después
-//   }
-// };
-
 const handleFileChange = async (e) => {
   const file = e.target.files[0];
   if (!file || !editMode) return; // Solo permitir subir imágenes en edición
@@ -140,7 +116,6 @@ const handleFileChange = async (e) => {
     if (!response.ok) throw new Error("Error al subir la imagen");
 
     const data = await response.json();
-    console.log("✅ Imagen subida correctamente:", data.data.srcImage);
 
     // Actualizar `srcImage` con la URL real del servidor
     setNewProduct((prev) => ({
@@ -153,39 +128,6 @@ const handleFileChange = async (e) => {
   }
 };
 
-
-
-
-
-// const handleAddProduct = async () => {
-//   try {
-//     const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ ...newProduct, srcImage: [] }), // Crea el producto sin imágenes inicialmente
-//     });
-//      if (!response.ok) {
-//       throw new Error('Error al agregar el producto');
-//     }
-//      const addedProduct = await response.json();
-//      // Subir las imágenes seleccionadas temporalmente
-//     for (const tempImage of newProduct.srcImage) {
-//       const formData = new FormData();
-//       formData.append('image', tempImage);
-//       await fetch(`${process.env.REACT_APP_API_URL}/api/products/addImage/${addedProduct._id}`, {
-//         method: 'POST',
-//         body: formData,
-//       });
-//     }
-//      // Actualiza la lista de productos
-//     const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/get`);
-//     const updatedProducts = await updatedResponse.json();
-//     setProducts(updatedProducts);
-//      toggleModal();
-//   } catch (error) {
-//     console.error('Error al agregar el producto:', error);
-//   }
-// };
 
 const handleAddProduct = async () => {
   try {
@@ -267,59 +209,6 @@ const handleDeleteProduct = async () => {
 };
 
 
-
-
-// const renderProducts = () => {
-//   return products.map((product) => (
-//     <div key={product._id} className={styles.productItem}>
-//       <div className={styles.productImageContainer}>
-//         {product.srcImage && product.srcImage.length > 0 ? (
-//           product.srcImage.map((image, index) => (
-//             <img
-//               key={index}
-//               src={image}
-//               alt={`${product.brand} - ${product.modelo}`}
-//               className={styles.productImage}
-//             />
-//           ))
-//         ) : (
-//           <img
-//             src="/assets/images/default.png"
-//             alt="Imagen por defecto"
-//             className={styles.productImage}
-//           />
-//         )}
-//       </div>
-//       <div className={styles.productInfo}>
-//         <h3>{product.brand} - {product.modelo}</h3>
-//         <p>{product.description}</p>
-//         <p>Precio: ${product.price}</p>
-//         <p>Capacidad: {product.capacity} puffs</p>
-//         <p>Sabores: {Array.isArray(product.flavors) && product.flavors.length > 0
-//           ? product.flavors.join(', ')
-//           : 'Sin sabores'}</p>
-//       </div>
-//       <div className={styles.actions}>
-// <button
-//   className={styles.editBtn}
-//   onClick={() => {
-//     console.log('Producto seleccionado para editar:', product); // Debug
-//     toggleModal(product);
-//   }}
-// >
-//   <MdEdit size={20} />
-// </button>
-// <button
-//   className={styles.deleteBtn}
-//   onClick={() => toggleDeleteModal(product._id)}
-// >
-//   <MdDelete size={20} />
-// </button>
-// </div>
-//     </div>
-//   ));
-// };
-
 const renderProducts = () => {
   return products.map((product) => (
     <div key={product._id} className={styles.productItem}>
@@ -354,7 +243,6 @@ const renderProducts = () => {
         <button
           className={styles.editBtn}
           onClick={() => {
-            console.log('Producto seleccionado para editar:', product); // Debug
             toggleModal(product);
           }}
         >
@@ -549,6 +437,4 @@ return (
 
 
 export default AdminProductos;
-
-
 
