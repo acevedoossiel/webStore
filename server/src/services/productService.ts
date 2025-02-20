@@ -66,9 +66,6 @@ class productService {
         flavors?: string[];
     }>) {
         try {
-            // if (productData.srcImage && productData.srcImage.length === 0) {
-            //     throw new Error('At least one image is required for the product');
-            // }
 
             const updatedProduct = await productModel.findByIdAndUpdate(id, productData, { new: true });
             if (!updatedProduct) {
@@ -80,27 +77,6 @@ class productService {
         }
     }
 
-    // async addImageToProduct(productId: string, file: Express.Multer.File) {
-    //     try {
-    //         // Generar la URL basada en la ubicación del archivo
-    //         const imageUrl = `/uploads/images/${file.filename}`;
-
-    //         // Agregar la URL a la base de datos
-    //         const updatedProduct = await productModel.findByIdAndUpdate(
-    //             productId,
-    //             { $addToSet: { srcImage: imageUrl } },
-    //             { new: true }
-    //         );
-
-    //         if (!updatedProduct) {
-    //             throw new Error('Product not found');
-    //         }
-
-    //         return updatedProduct;
-    //     } catch (error) {
-    //         throw new Error(`Error while adding image to product`);
-    //     }
-    // }
 
     async addImageToProduct(productId: string, imageUrl: string) {
         try {
@@ -245,7 +221,7 @@ class productService {
     async getLatestProducts() {
         try {
             // Realizamos la consulta para obtener los tres productos más recientes
-            const latestProducts = await productModel.find().sort({ createdAt: -1 }).limit(3);
+            const latestProducts = await productModel.find().sort({ createdAt: -1 }).limit(8);
             return latestProducts;
         } catch (error) {
             console.error("Error while getting latest products from DB:", error);

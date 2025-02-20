@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <footer className="footer">
             <div className="footer-container">
-                <p>&copy; 2024 OnlyVapes. Tienda en Huajuapan de León y Oaxaca.</p>
+                <p>&copy; 2025 OnlyVapes. Tienda en Huajuapan de León y Oaxaca.</p>
                 <div className="footer-links">
                     <a href="/about" className="footer-link">Sobre Nosotros</a>
                 </div>
