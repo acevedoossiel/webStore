@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Home = () => {
   const [latestProducts, setLatestProducts] = useState([]);
@@ -12,7 +14,8 @@ const Home = () => {
   const settings1 = {
     dots: true,
     infinite: true,
-    speed: 500,
+    autoplay: true, 
+    autoplaySpeed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
@@ -21,7 +24,8 @@ const Home = () => {
 const settings2 = {
   dots: false,
   infinite: true,
-  speed: 500,
+  autoplay: true, 
+  autoplaySpeed: 1000,
   slidesToShow: 2.93, // Mostrar 3 imágenes al mismo tiempo
   slidesToScroll: 1,
   centerMode: true, // Permite que las imágenes de los lados sean visibles
