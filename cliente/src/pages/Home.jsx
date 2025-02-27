@@ -15,7 +15,8 @@ const Home = () => {
     dots: true,
     infinite: true,
     autoplay: true, 
-    autoplaySpeed: 3000,
+    speed:1000,
+    autoplaySpeed: 5000,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
@@ -25,7 +26,8 @@ const settings2 = {
   dots: false,
   infinite: true,
   autoplay: true, 
-  autoplaySpeed: 1000,
+  speed: 1500,
+  autoplaySpeed: 2000,
   slidesToShow: 2.93, // Mostrar 3 imágenes al mismo tiempo
   slidesToScroll: 1,
   centerMode: true, // Permite que las imágenes de los lados sean visibles

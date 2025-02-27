@@ -35,6 +35,10 @@ const ProductDetail = () => {
         fetchProduct();
     }, [id]);
 
+    const closeModal = () => {
+        setSelectedImage(null);
+    };
+
     const handleQuantityChange = (value) => {
         if (value >= 1) {
             setQuantity(value);
@@ -141,7 +145,8 @@ const ProductDetail = () => {
 
             {/* Modal para ver la imagen en grande */}
             {selectedImage && (
-                <div className={styles.modal} onClick={() => setSelectedImage(null)}>
+                <div className={styles.modal}>
+                    <button className={styles.closeButton} onClick={closeModal}>✖</button>
                     <div className={styles.modalContent}>
                         <img src={`${process.env.REACT_APP_API_URL}${selectedImage}`} alt="Producto ampliado" />
                     </div>
