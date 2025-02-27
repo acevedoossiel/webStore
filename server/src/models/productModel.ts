@@ -8,6 +8,8 @@ export interface IProduct extends Document {
     price: number;
     capacity: number
     flavors: string[];
+    hasPromotion: boolean;
+    promotions: { quantity: number; price: number }[];
 }
 
 const productSchema = new Schema<IProduct>(
@@ -46,6 +48,14 @@ const productSchema = new Schema<IProduct>(
             type: [String],
             default: [],
         },
+        hasPromotion: {
+            type: Boolean,
+            default: false,
+        },
+        promotions: [{
+            quantity: { type: Number, required: true },
+            price: { type: Number, required: true }
+        }]
     },
     {
         timestamps: true,

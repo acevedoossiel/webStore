@@ -19,6 +19,11 @@ class productRoutes {
         this.router.post('/removeImage/:id', ProductController.removeImage);
         this.router.post('/replaceImage/:id', imageUpload.single('image'), ProductController.replaceImage);
         this.router.get('/latest', ProductController.getLatestProducts);
+        this.router.get('/with-promotions', ProductController.getProductsWithPromotions);
+        this.router.post('/:id/add-promotion', ProductController.addPromotion);
+        this.router.put('/:id/update-promotions', ProductController.updatePromotions);
+        this.router.delete('/:id/remove-promotion/:quantity', ProductController.removePromotion);
+        this.router.delete('/:id/clear-promotions', ProductController.clearPromotions);
     }
 }
 const ProductRoutes = new productRoutes();

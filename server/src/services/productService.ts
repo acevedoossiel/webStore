@@ -229,6 +229,92 @@ class productService {
         }
     }
 
+    async getProductsWithPromotions() {
+        try {
+            return await productModel.find({ hasPromotion: true });
+        } catch (error) {
+            throw new Error("Error while getting products with promotions");
+        }
+    }
+
+    async addPromotion(productId: string, quantity: number, price: number) {
+        try {
+            const product = await productModel.findById(productId);
+            if (!product) {
+                throw new Error("Product not found");
+            }
+
+            // Verificar si ya existe una promoción con la misma cantidad
+            const existingPromo = product.promotions.find(promo => promo.quantity === quantity);
+            if (existingPromo) {
+                throw new Error("A promotion with this quantity already exists");
+            }
+
+            // Agregar nueva promoción
+            product.promotions.push({ quantity, price });
+            product.hasPromotion = true;
+            await product.save();
+
+            return product;
+        } catch (error) {
+            throw new Error("Error while adding promotion");
+        }
+    }
+
+    async updatePromotions(productId: string, promotions: { quantity: number; price: number }[]) {
+        try {
+            const product = await productModel.findById(productId);
+            if (!product) {
+                throw new Error("Product not found");
+            }
+
+            // Reemplazar todas las promociones
+            product.promotions = promotions;
+            product.hasPromotion = promotions.length > 0;
+            await product.save();
+
+            return product;
+        } catch (error) {
+            throw new Error("Error while updating promotions");
+        }
+    }
+
+    async removePromotion(productId: string, quantity: number) {
+        try {
+            const product = await productModel.findById(productId);
+            if (!product) {
+                throw new Error("Product not found");
+            }
+
+            // Filtrar para eliminar la promoción específica
+            product.promotions = product.promotions.filter(promo => promo.quantity !== quantity);
+            product.hasPromotion = product.promotions.length > 0;
+            await product.save();
+
+            return product;
+        } catch (error) {
+            throw new Error("Error while removing promotion");
+        }
+    }
+
+    async clearPromotions(productId: string) {
+        try {
+            const product = await productModel.findById(productId);
+            if (!product) {
+                throw new Error("Product not found");
+            }
+
+            // Limpiar todas las promociones
+            product.promotions = [];
+            product.hasPromotion = false;
+            await product.save();
+
+            return product;
+        } catch (error) {
+            throw new Error("Error while clearing promotions");
+        }
+    }
+
 }
 
 export const ProductService = new productService();
