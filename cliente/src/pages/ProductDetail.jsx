@@ -12,6 +12,8 @@ const ProductDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedFlavor, setSelectedFlavor] = useState(null);
+    const [quantity, setQuantity] = useState(1); // Nuevo estado para la cantidad
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -32,6 +34,27 @@ const ProductDetail = () => {
 
         fetchProduct();
     }, [id]);
+
+    const closeModal = () => {
+        setSelectedImage(null);
+    };
+
+    const handleQuantityChange = (value) => {
+        if (value >= 1) {
+            setQuantity(value);
+        }
+    };
+
+    const addToCart = () => {
+        if (selectedFlavor) {
+            console.log(`Producto seleccionado: nombre:${product.brand} ${product.modelo} ${product.capacity},
+                sabor: ${selectedFlavor},
+                cantidad: ${quantity},
+                precio total: MX $${(product.price * quantity).toFixed(2)}`);
+        } else {
+            console.log('Por favor, selecciona un sabor.');
+        }
+    };
 
     if (loading) return <p className={styles.loading}>Cargando...</p>;
     if (error) return <p className={styles.error}>{error}</p>;
@@ -66,22 +89,64 @@ const ProductDetail = () => {
                         <p className={styles.price}><strong>MX ${product.price}</strong></p>
                         <p className={styles.description}>{product.description}</p>
 
-                        {/* Sabores en escalera */}
-                        <h2>Sabor:</h2>
+                        {/* Sabores */}
+                        <div className={styles.quantityContainer}>
+                        <span>Sabor:</span>
+                        </div>
                         <div className={styles.flavorsContainer}>
                             {product.flavors.map((flavor, index) => (
-                                <span key={index} className={`${styles.flavor} ${index % 2 === 0 ? styles.flavorLeft : styles.flavorRight}`}>
+                                <button
+                                    key={index}
+                                    className={styles.flavorButton}
+                                    onClick={() => setSelectedFlavor(flavor)}
+                                    style={{
+                                        background: selectedFlavor === flavor ? '#00517D' : '#00AEF2'
+                                    }}
+                                >
                                     {flavor}
-                                </span>
+                                </button>
                             ))}
                         </div>
+
+                        {/* Selector de cantidad */}
+                        <div className={styles.quantityContainer}>
+                            <span>Cantidad:</span>
+                            <div className={styles.quantitySelector}>
+                                <button
+                                    className={styles.quantityButton}
+                                    onClick={() => handleQuantityChange(quantity - 1)}
+                                    disabled={quantity <= 1}
+                                >
+                                    -
+                                </button>
+                                <input
+                                    type="number"
+                                    className={styles.quantityInput}
+                                    value={quantity}
+                                    onChange={(e) => handleQuantityChange(Number(e.target.value))}
+                                    min="1"
+                                />
+                                <button
+                                    className={styles.quantityButton}
+                                    onClick={() => handleQuantityChange(quantity + 1)}
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
+
+                        <br />
+                        <button className={styles.addToCartButton} onClick={addToCart}>
+                            Agregar al carrito
+                        </button>
                     </div>
                 </div>
             )}
 
             {/* Modal para ver la imagen en grande */}
             {selectedImage && (
-                <div className={styles.modal} onClick={() => setSelectedImage(null)}>
+                <div className={styles.modal}>
+                    <button className={styles.closeButton} onClick={closeModal}>✖</button>
                     <div className={styles.modalContent}>
                         <img src={`${process.env.REACT_APP_API_URL}${selectedImage}`} alt="Producto ampliado" />
                     </div>
