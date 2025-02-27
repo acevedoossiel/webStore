@@ -219,6 +219,84 @@ class productController {
         }
     }
 
+    async getProductsWithPromotions(req: Request, res: Response) {
+        try {
+            const products = await ProductService.getProductsWithPromotions();
+            return res.status(200).json(products);
+        } catch (error) {
+            return res.status(500).json({ message: "Error while getting products with promotions" });
+        }
+    }
+
+    async addPromotion(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { quantity, price } = req.body;
+
+            if (!quantity || !price) {
+                return res.status(400).json({ message: "Quantity and price are required" });
+            }
+
+            const updatedProduct = await ProductService.addPromotion(id, quantity, price);
+            return res.status(200).json({
+                message: "Promotion added successfully",
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: "Error while adding promotion" });
+        }
+    }
+
+    async updatePromotions(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { promotions } = req.body;
+
+            if (!Array.isArray(promotions) || promotions.length === 0) {
+                return res.status(400).json({ message: "Promotions array is required" });
+            }
+
+            const updatedProduct = await ProductService.updatePromotions(id, promotions);
+            return res.status(200).json({
+                message: "Promotions updated successfully",
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: "Error while updating promotions" });
+        }
+    }
+
+    async removePromotion(req: Request, res: Response) {
+        try {
+            const { id, quantity } = req.params;
+
+            if (!quantity) {
+                return res.status(400).json({ message: "Quantity is required" });
+            }
+
+            const updatedProduct = await ProductService.removePromotion(id, parseInt(quantity));
+            return res.status(200).json({
+                message: "Promotion removed successfully",
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: "Error while removing promotion" });
+        }
+    }
+
+    async clearPromotions(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const updatedProduct = await ProductService.clearPromotions(id);
+            return res.status(200).json({
+                message: "All promotions cleared successfully",
+                data: updatedProduct,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: "Error while clearing promotions" });
+        }
+    }
+
 }
 
 export const ProductController = new productController();
