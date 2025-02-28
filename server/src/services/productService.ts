@@ -237,6 +237,14 @@ class productService {
         }
     }
 
+    async getProductsWithoutPromotions() {
+        try {
+            return await productModel.find({ hasPromotion: false });
+        } catch (error) {
+            throw new Error("Error while getting products without promotions");
+        }
+    }
+
     async addPromotion(productId: string, quantity: number, price: number) {
         try {
             const product = await productModel.findById(productId);

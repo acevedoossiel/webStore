@@ -20,6 +20,7 @@ class productRoutes {
         this.router.post('/replaceImage/:id', imageUpload.single('image'), ProductController.replaceImage);
         this.router.get('/latest', ProductController.getLatestProducts);
         this.router.get('/with-promotions', ProductController.getProductsWithPromotions);
+        this.router.get('/without-promotions', ProductController.getProductsWithoutPromotions);
         this.router.post('/:id/add-promotion', ProductController.addPromotion);
         this.router.put('/:id/update-promotions', ProductController.updatePromotions);
         this.router.delete('/:id/remove-promotion/:quantity', ProductController.removePromotion);

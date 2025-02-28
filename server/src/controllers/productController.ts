@@ -228,6 +228,15 @@ class productController {
         }
     }
 
+    async getProductsWithoutPromotions(req: Request, res: Response) {
+        try {
+            const products = await ProductService.getProductsWithoutPromotions();
+            return res.status(200).json(products);
+        } catch (error) {
+            return res.status(500).json({ message: "Error while getting products without promotions" });
+        }
+    }
+
     async addPromotion(req: Request, res: Response) {
         try {
             const { id } = req.params;
