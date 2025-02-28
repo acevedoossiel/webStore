@@ -35,7 +35,9 @@ useEffect(() => {
         throw new Error('Error al obtener los productos');
       }
       const data = await response.json();
-      setProducts(data);
+      const sortedProducts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      setProducts(sortedProducts);
     } catch (error) {
       console.error('Error al obtener los productos:', error);
     }
@@ -148,7 +150,10 @@ const handleAddProduct = async () => {
     // Actualizar la lista de productos
     const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/get`);
     const updatedProducts = await updatedResponse.json();
-    setProducts(updatedProducts);
+    const sortedProducts = updatedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Actualizar el estado con los productos ordenados
+    setProducts(sortedProducts);
 
     toggleModal();
   } catch (error) {
@@ -176,7 +181,10 @@ const handleEditProduct = async () => {
     }
 
     const updatedProducts = await updatedResponse.json();
-    setProducts(updatedProducts);
+    const sortedProducts = updatedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Actualizar el estado con los productos ordenados
+    setProducts(sortedProducts);
 
     toggleModal();
   } catch (error) {
@@ -201,7 +209,10 @@ const handleDeleteProduct = async () => {
     }
 
     const updatedProducts = await updatedResponse.json();
-    setProducts(updatedProducts);
+    const sortedProducts = updatedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Actualizar el estado con los productos ordenados
+    setProducts(sortedProducts);
     toggleDeleteModal();
   } catch (error) {
     console.error('Error al eliminar el producto:', error);

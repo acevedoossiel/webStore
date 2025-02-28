@@ -7,6 +7,12 @@ const AdminRedes = () => {
     const [currentEdit, setCurrentEdit] = useState({ id: '', link: '', value: '' });
     const [newValue, setNewValue] = useState('');
     const [error, setError] = useState('');
+    const [initialSetup, setInitialSetup] = useState(false);
+    const [newLinks, setNewLinks] = useState({
+        main: '',
+        backup: '',
+        number: '',
+    });
 
     useEffect(() => {
         const fetchLinks = async () => {
@@ -16,7 +22,12 @@ const AdminRedes = () => {
                     throw new Error('Error al obtener los enlaces');
                 }
                 const data = await response.json();
-                setLinks(data);
+                
+                if (data.length === 0) {
+                    setInitialSetup(true); // No hay datos, mostrar formulario de inicio
+                } else {
+                    setLinks(data);
+                }
             } catch (err) {
                 setError('Hubo un error al cargar las redes.');
             }
@@ -24,6 +35,37 @@ const AdminRedes = () => {
 
         fetchLinks();
     }, []);
+
+    const handleInputChange = (e) => {
+        setNewLinks({ ...newLinks, [e.target.name]: e.target.value });
+    };
+
+    const saveInitialLinks = async () => {
+        try {
+            const entries = Object.entries(newLinks).map(([key, value]) => ({
+                link: key,
+                value,
+            }));
+
+            const createRequests = entries.map(entry =>
+                fetch(`${process.env.REACT_APP_API_URL}/api/links/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(entry),
+                })
+            );
+
+            await Promise.all(createRequests);
+
+            const updatedResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/links/get`);
+            const updatedData = await updatedResponse.json();
+            setLinks(updatedData);
+            setInitialSetup(false);
+        } catch (err) {
+            console.error("Error al crear enlaces:", err);
+            setError("Hubo un error al guardar los contactos.");
+        }
+    };
 
     const openModal = (id, link, value) => {
         setCurrentEdit({ id, link, value });
@@ -67,25 +109,63 @@ const AdminRedes = () => {
 
             {error && <p className={styles.errorMessage}>{error}</p>}
 
-            <div className={styles.linksList}>
-                {links.map((link) => (
-                    <div key={link._id} className={styles.linkItem}>
-                        <p>
-                            <strong>
-                                {link.link === 'main' && 'Cuenta Principal:'}
-                                {link.link === 'backup' && 'Cuenta de Respaldo:'}
-                                {link.link === 'number' && 'Número:'}
-                            </strong>{' '}
-                            {link.value}
-                        </p>
-                        <button onClick={() => openModal(link._id, link.link, link.value)} className={styles.editButton}>
-                            Editar
-                        </button>
+            {initialSetup ? (
+                <div className={styles.initialSetupContainer}>
+                    <h2>Agregar Contactos</h2>
+                    <div className={styles.inputGroup}>
+                        <label>Cuenta Principal:</label>
+                        <input
+                            type="text"
+                            name="main"
+                            value={newLinks.main}
+                            onChange={handleInputChange}
+                            placeholder="URL de Instagram principal"
+                        />
                     </div>
-                ))}
-            </div>
+                    <div className={styles.inputGroup}>
+                        <label>Cuenta de Respaldo:</label>
+                        <input
+                            type="text"
+                            name="backup"
+                            value={newLinks.backup}
+                            onChange={handleInputChange}
+                            placeholder="URL de Instagram de respaldo"
+                        />
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label>Número de Contacto:</label>
+                        <input
+                            type="text"
+                            name="number"
+                            value={newLinks.number}
+                            onChange={handleInputChange}
+                            placeholder="Número de contacto"
+                        />
+                    </div>
+                    <button className={styles.saveButton} onClick={saveInitialLinks}>
+                        Guardar
+                    </button>
+                </div>
+            ) : (
+                <div className={styles.linksList}>
+                    {links.map((link) => (
+                        <div key={link._id} className={styles.linkItem}>
+                            <p>
+                                <strong>
+                                    {link.link === 'main' && 'Cuenta Principal:'}
+                                    {link.link === 'backup' && 'Cuenta de Respaldo:'}
+                                    {link.link === 'number' && 'Número:'}
+                                </strong>{' '}
+                                {link.value}
+                            </p>
+                            <button onClick={() => openModal(link._id, link.link, link.value)} className={styles.editButton}>
+                                Editar
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
 
-            {/* Modal */}
             {modalOpen && (
                 <div className={styles.modal}>
                     <div className={styles.modalContent}>
