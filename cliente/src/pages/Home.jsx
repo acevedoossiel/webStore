@@ -135,7 +135,7 @@ const settings2 = {
       {/* Sección 'Lo nuevo' */}
       <div className={styles['contenido']}>
         <p>Lo nuevo</p>
-        <a href="/category">Ver todos los productos</a>
+        <Link to="/category">Ver todos los productos</Link>
         <div className={styles['latest-products-container']}>
           {latestProducts.map((product, index) => (
             <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>

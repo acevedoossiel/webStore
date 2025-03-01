@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { PiHandbagFill } from "react-icons/pi";
 import { LuMenu } from "react-icons/lu";
+import CartSidebar from "../CartSidebar";
+import { useCart } from "../../contexts/CartContext";  // No es necesario importar getTotalItems aquí
 import styles from './Navbar.module.css';
 
 function Navbar() {
@@ -11,8 +13,12 @@ function Navbar() {
     backup: '',
     number: ''
   });
+  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para abrir/cerrar el carrito
   
-  const whatsappMessage = 'Hola, quiero más información Nava.';
+  // Usar el contexto del carrito
+  const { cartItems, removeFromCart, getTotalItems } = useCart(); // Ahora getTotalItems viene desde el contexto
+
+  const whatsappMessage = 'Hola, quiero más información.';
 
   const toggleMenu = () => {
     setIsMenuOpen(prevState => !prevState);
@@ -22,6 +28,13 @@ function Navbar() {
     setIsMenuOpen(false);
   };
 
+  // Función para abrir y cerrar el carrito
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+    console.log("se abrio el carrito");
+  };
+
+  // Fetch de enlaces
   useEffect(() => {
     const fetchLinks = async () => {
       try {
@@ -48,6 +61,8 @@ function Navbar() {
 
   const whatsappLink = `https://wa.me/52${links.number}?text=${encodeURIComponent(whatsappMessage)}`;
 
+  const totalQuantity = getTotalItems();
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
@@ -66,8 +81,9 @@ function Navbar() {
         </Link>
 
         <div className={styles.navbarIcons}>
-          <button className={styles.cartBtn}>
+          <button className={styles.cartBtn} onClick={toggleCart}>
             <PiHandbagFill className={styles.icon} />
+            {totalQuantity > 0 && <span className={styles.cartCount}>{totalQuantity}</span>}
           </button>
         </div>
       </div>
@@ -117,6 +133,14 @@ function Navbar() {
           />
         </button>
       </div>
+
+      {/* Cart Sidebar */}
+      <CartSidebar 
+        isOpen={isCartOpen} 
+        onClose={toggleCart} 
+        cartItems={cartItems} 
+        removeFromCart={removeFromCart} 
+      />
     </nav>
   );
 }
