@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { useCart } from '../contexts/CartContext';
+import { AiOutlineArrowLeft } from 'react-icons/ai'; // Icono de retroceso
 import styles from './ProductDetail.module.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
+    const navigate = useNavigate(); // Hook para la navegación
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFlavor, setSelectedFlavor] = useState(null);
-    const [quantity, setQuantity] = useState(1); // Nuevo estado para la cantidad
+    const [quantity, setQuantity] = useState(1);
+    const [finalPrice, setFinalPrice] = useState(0);
+    const [basePrice, setBasePrice] = useState(0);
+    const [isPromoActive, setIsPromoActive] = useState(false);
+    const [flavorError, setFlavorError] = useState(''); // Error de sabor
+    const { addToCart } = useCart();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -24,6 +32,8 @@ const ProductDetail = () => {
                 }
                 const data = await response.json();
                 setProduct(data);
+                setBasePrice(data.price);
+                setFinalPrice(data.price);
             } catch (err) {
                 setError('Error al obtener el producto');
                 console.error(err);
@@ -45,15 +55,54 @@ const ProductDetail = () => {
         }
     };
 
-    const addToCart = () => {
-        if (selectedFlavor) {
-            console.log(`Producto seleccionado: nombre:${product.brand} ${product.modelo} ${product.capacity},
-                sabor: ${selectedFlavor},
-                cantidad: ${quantity},
-                precio total: MX $${(product.price * quantity).toFixed(2)}`);
-        } else {
-            console.log('Por favor, selecciona un sabor.');
+    const calculatePrice = useCallback(() => {
+        let price = basePrice;
+        let promoActive = false;
+
+        if (product && product.promotions && product.promotions.length > 0) {
+            for (let promotion of product.promotions) {
+                if (quantity >= promotion.quantity) {
+                    if (promotion.price < price) {
+                        price = promotion.price;
+                        promoActive = true;
+                    }
+                }
+            }
         }
+
+        setFinalPrice(price);
+        setIsPromoActive(promoActive);
+    }, [basePrice, product, quantity]);
+
+    useEffect(() => {
+        if (product) {
+            calculatePrice();
+        }
+    }, [quantity, product, calculatePrice]);
+
+    const handleAddToCart = () => {
+        if (selectedFlavor) {
+            setFlavorError(''); // Limpiar el error si se selecciona un sabor
+
+            const productDetails = {
+                id: product._id,
+                name: `${product.brand} ${product.modelo} ${product.capacity}`,
+                flavor: selectedFlavor,
+                quantity: quantity,
+                price: product.price,
+                image: product.srcImage[0],
+                hasPromotion: product.hasPromotion,
+                promotions: product.promotions,
+            };
+            console.log('Producto a agregar al carrito:', productDetails);
+            addToCart(productDetails);
+        } else {
+            setFlavorError('Por favor, selecciona un sabor.'); // Mostrar error si no se selecciona sabor
+        }
+    };
+
+    const goBack = () => {
+        navigate(-1); // Regresa a la página anterior
     };
 
     if (loading) return <p className={styles.loading}>Cargando...</p>;
@@ -61,9 +110,12 @@ const ProductDetail = () => {
 
     return (
         <div className={styles.productDetailContainer}>
+            <button className={styles.goBackButton} onClick={goBack}>
+                <AiOutlineArrowLeft size={24} /> Volver
+            </button>
+
             {product && (
                 <div className={styles.productDetail}>
-                    {/* Carrusel de imágenes */}
                     <div className={styles.imageContainer}>
                         <Swiper
                             navigation={true}
@@ -83,15 +135,22 @@ const ProductDetail = () => {
                         </Swiper>
                     </div>
 
-                    {/* Información del producto */}
                     <div className={styles.productInfo}>
                         <h1>{product.brand} {product.modelo} {product.capacity}</h1>
-                        <p className={styles.price}><strong>MX ${product.price}</strong></p>
+                        <p className={styles.price}>
+                            {isPromoActive ? (
+                                <>
+                                    <span className={styles.originalPrice}>MX ${basePrice.toFixed(2)}</span>
+                                    <strong>MX ${finalPrice.toFixed(2)}</strong>
+                                </>
+                            ) : (
+                                <strong>MX ${basePrice.toFixed(2)}</strong>
+                            )}
+                        </p>
                         <p className={styles.description}>{product.description}</p>
 
-                        {/* Sabores */}
                         <div className={styles.quantityContainer}>
-                        <span>Sabor:</span>
+                            <span>Sabor:</span>
                         </div>
                         <div className={styles.flavorsContainer}>
                             {product.flavors.map((flavor, index) => (
@@ -108,7 +167,8 @@ const ProductDetail = () => {
                             ))}
                         </div>
 
-                        {/* Selector de cantidad */}
+                        {flavorError && <p className={styles.flavorError}>{flavorError}</p>} {/* Mensaje de error */}
+
                         <div className={styles.quantityContainer}>
                             <span>Cantidad:</span>
                             <div className={styles.quantitySelector}>
@@ -135,15 +195,27 @@ const ProductDetail = () => {
                             </div>
                         </div>
 
+                        {product.promotions && product.promotions.length > 0 && (
+                            <div className={styles.promotionsContainer}>
+                                <h3>Promociones disponibles:</h3>
+                                <ul>
+                                    {product.promotions.map((promotion, index) => (
+                                        <li key={index}>
+                                            <strong>{promotion.quantity} productos</strong> - Precio: MX ${promotion.price}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
                         <br />
-                        <button className={styles.addToCartButton} onClick={addToCart}>
+                        <button className={styles.addToCartButton} onClick={handleAddToCart}>
                             Agregar al carrito
                         </button>
                     </div>
                 </div>
             )}
 
-            {/* Modal para ver la imagen en grande */}
             {selectedImage && (
                 <div className={styles.modal}>
                     <button className={styles.closeButton} onClick={closeModal}>✖</button>

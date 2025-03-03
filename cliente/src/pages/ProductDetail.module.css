@@ -184,3 +184,34 @@
 .addToCartButton:hover {
   background: #0176A0;
 }
+
+.originalPrice {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 10px;
+}
+
+.errorContainer {
+  border: 2px solid red;
+}
+
+.errorText {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.goBackButton {
+  background: none;
+  border: none;
+  color: #00517D;
+  font-size: 18px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.flavorError {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}

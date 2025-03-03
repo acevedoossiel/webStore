@@ -7,6 +7,7 @@ import Role from './pages/Role';
 import AdminRoutes from './routes/AdminRoutes';
 import Login from './pages/admin/Login';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext'; 
 import Cookies from 'js-cookie';
 import Category from './pages/Category';
 import ProductDetail from './pages/ProductDetail';
@@ -28,7 +29,6 @@ const AppContent = () => {
           });
 
           if (response.ok) {
-            //const data = await response.json();
           } else {
             Cookies.remove('authToken');
           }
@@ -68,7 +68,9 @@ const AppContent = () => {
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </AuthProvider>
   );
 }
