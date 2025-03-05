@@ -74,11 +74,16 @@ export const CartProvider = ({ children }) => {
 
     const cartWithPrices = calculateCartPrices();
 
+    const clearCart = () => {
+        setCartItems([]);
+    };
+
     return (
         <CartContext.Provider value={{
             cartItems: cartWithPrices,
             addToCart,
             removeFromCart,
+            clearCart,
             getTotalItems,
             incrementItemQuantity,
             decrementItemQuantity

@@ -17,7 +17,7 @@ const getPriceWithPromotion = (price, cartItems, promotions) => {
 
 const CartSidebar = ({ isOpen, onClose }) => {
     const [links, setLinks] = useState({ number: '' });
-    const { cartItems, removeFromCart, getTotalItems, incrementItemQuantity, decrementItemQuantity } = useCart();
+    const { cartItems, removeFromCart, clearCart, getTotalItems, incrementItemQuantity, decrementItemQuantity } = useCart();
     const totalQuantity = getTotalItems();
 
     const totalPrice = cartItems.reduce((total, item) =>
@@ -58,6 +58,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
         const phoneNumber = links.number;
         const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
         window.location.href = whatsappLink;
+        clearCart();
     };
 
     return (
