@@ -5,12 +5,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import { useCart } from '../contexts/CartContext';
-import { AiOutlineArrowLeft } from 'react-icons/ai'; // Icono de retroceso
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 import styles from './ProductDetail.module.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const navigate = useNavigate(); // Hook para la navegación
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -20,7 +20,7 @@ const ProductDetail = () => {
     const [finalPrice, setFinalPrice] = useState(0);
     const [basePrice, setBasePrice] = useState(0);
     const [isPromoActive, setIsPromoActive] = useState(false);
-    const [flavorError, setFlavorError] = useState(''); // Error de sabor
+    const [flavorError, setFlavorError] = useState('');
     const { addToCart } = useCart();
 
     useEffect(() => {
@@ -59,13 +59,11 @@ const ProductDetail = () => {
         let price = basePrice;
         let promoActive = false;
 
-        if (product && product.promotions && product.promotions.length > 0) {
+        if (product?.promotions?.length > 0) {
             for (let promotion of product.promotions) {
-                if (quantity >= promotion.quantity) {
-                    if (promotion.price < price) {
-                        price = promotion.price;
-                        promoActive = true;
-                    }
+                if (quantity >= promotion.quantity && promotion.price < price) {
+                    price = promotion.price;
+                    promoActive = true;
                 }
             }
         }
@@ -80,29 +78,35 @@ const ProductDetail = () => {
         }
     }, [quantity, product, calculatePrice]);
 
-    const handleAddToCart = () => {
-        if (selectedFlavor) {
-            setFlavorError(''); // Limpiar el error si se selecciona un sabor
+    const handleFlavorClick = (flavor) => {
+        setSelectedFlavor((prevFlavor) => (prevFlavor === flavor ? null : flavor));
+        setFlavorError('');
+    };
 
-            const productDetails = {
-                id: product._id,
-                name: `${product.brand} ${product.modelo} ${product.capacity}`,
-                flavor: selectedFlavor,
-                quantity: quantity,
-                price: product.price,
-                image: product.srcImage[0],
-                hasPromotion: product.hasPromotion,
-                promotions: product.promotions,
-            };
-            console.log('Producto a agregar al carrito:', productDetails);
-            addToCart(productDetails);
-        } else {
-            setFlavorError('Por favor, selecciona un sabor.'); // Mostrar error si no se selecciona sabor
+    const handleAddToCart = () => {
+        if (product?.flavors?.length > 0 && !selectedFlavor) {
+            setFlavorError('Por favor, selecciona un sabor.');
+            return;
         }
+
+        const productDetails = {
+            id: product._id,
+            name: `${product.brand} ${product.modelo} ${product.capacity}`,
+            flavor: selectedFlavor || null,
+            quantity,
+            price: finalPrice,
+            image: product.srcImage[0],
+            hasPromotion: product.hasPromotion,
+            promotions: product.promotions,
+            basePrecie: product.price,
+        };
+
+        console.log('Producto a agregar al carrito:', productDetails);
+        addToCart(productDetails);
     };
 
     const goBack = () => {
-        navigate(-1); // Regresa a la página anterior
+        navigate(-1);
     };
 
     if (loading) return <p className={styles.loading}>Cargando...</p>;
@@ -117,11 +121,7 @@ const ProductDetail = () => {
             {product && (
                 <div className={styles.productDetail}>
                     <div className={styles.imageContainer}>
-                        <Swiper
-                            navigation={true}
-                            modules={[Navigation]}
-                            className={styles.swiperContainer}
-                        >
+                        <Swiper navigation modules={[Navigation]} className={styles.swiperContainer}>
                             {product.srcImage.map((img, index) => (
                                 <SwiperSlide key={index}>
                                     <img
@@ -149,25 +149,28 @@ const ProductDetail = () => {
                         </p>
                         <p className={styles.description}>{product.description}</p>
 
-                        <div className={styles.quantityContainer}>
-                            <span>Sabor:</span>
-                        </div>
-                        <div className={styles.flavorsContainer}>
-                            {product.flavors.map((flavor, index) => (
-                                <button
-                                    key={index}
-                                    className={styles.flavorButton}
-                                    onClick={() => setSelectedFlavor(flavor)}
-                                    style={{
-                                        background: selectedFlavor === flavor ? '#00517D' : '#00AEF2'
-                                    }}
-                                >
-                                    {flavor}
-                                </button>
-                            ))}
-                        </div>
-
-                        {flavorError && <p className={styles.flavorError}>{flavorError}</p>} {/* Mensaje de error */}
+                        {product.flavors?.length > 0 && (
+                            <>
+                                <div className={styles.quantityContainer}>
+                                    <span>Sabor:</span>
+                                </div>
+                                <div className={styles.flavorsContainer}>
+                                    {product.flavors.map((flavor, index) => (
+                                        <button
+                                            key={index}
+                                            className={styles.flavorButton}
+                                            onClick={() => handleFlavorClick(flavor)}
+                                            style={{
+                                                background: selectedFlavor === flavor ? '#00517D' : '#00AEF2'
+                                            }}
+                                        >
+                                            {flavor}
+                                        </button>
+                                    ))}
+                                </div>
+                                {flavorError && <p className={styles.flavorError}>{flavorError}</p>}
+                            </>
+                        )}
 
                         <div className={styles.quantityContainer}>
                             <span>Cantidad:</span>
@@ -195,7 +198,7 @@ const ProductDetail = () => {
                             </div>
                         </div>
 
-                        {product.promotions && product.promotions.length > 0 && (
+                        {product.promotions?.length > 0 && (
                             <div className={styles.promotionsContainer}>
                                 <h3>Promociones disponibles:</h3>
                                 <ul>
