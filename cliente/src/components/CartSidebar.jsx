@@ -95,13 +95,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
                                     <p className={styles.itemName}>{item.name}</p>
                                     <p className={styles.itemName}>{item.flavor}</p>
                                     <div className={styles.itemPrice}>
-                                        <span className={styles.originalPrice}>
-                                            ${item.basePrecie}
-                                        </span>
-                                        {item.promotions && item.promotions.length > 0 && totalQuantity >= item.promotions[0].quantity && (
-                                            <span className={styles.discountedPrice}>
-                                                ${discountedPrice.toFixed(2)}
-                                            </span>
+                                        {item.promotions && item.promotions.length > 0 && totalQuantity >= item.promotions[0].quantity ? (
+                                            <>
+                                                <span className={styles.originalPrice}>${item.basePrecie}</span>
+                                                <span className={styles.discountedPrice}>${discountedPrice.toFixed(2)}</span>
+                                            </>
+                                        ) : (
+                                            <span className={styles.itemPrice}>${item.basePrecie}</span>
                                         )}
                                     </div>
                                     <div className={styles.itemQuantityContainer}>
