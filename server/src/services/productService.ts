@@ -1,4 +1,3 @@
-import { log } from "console";
 import productModel from "../models/productModel";
 import fs from 'fs';
 import path from 'path';
@@ -13,20 +12,23 @@ class productService {
         price: number;
         capacity: number;
         flavors?: string[];
+        featured?: boolean;
     }) {
         try {
             const existingProduct = await productModel.findOne({
                 brand: productData.brand,
                 modelo: productData.modelo,
+                capacity: productData.capacity
             });
 
             if (existingProduct) {
-                throw new Error('A product with the same brand and model already exists');
+                throw new Error('A product with the same brand and model and capacity already exists');
             }
 
             const newProduct = new productModel({
                 ...productData,
-                srcImage: productData.srcImage || [], // Default a un array vacío si no se especifica
+                srcImage: productData.srcImage || [],
+                featured: productData.featured || false,
             });
             return await newProduct.save();
         } catch (error) {
@@ -64,6 +66,7 @@ class productService {
         price: number;
         capacity: number;
         flavors?: string[];
+        featured?: boolean;
     }>) {
         try {
 
@@ -322,6 +325,15 @@ class productService {
             throw new Error("Error while clearing promotions");
         }
     }
+
+    async getFeaturedProducts() {
+        try {
+            return await productModel.find({ featured: true });
+        } catch (error) {
+            throw new Error("Error while getting featured products");
+        }
+    }
+
 
 }
 
