@@ -21,6 +21,7 @@ const [newProduct, setNewProduct] = useState({
   capacity: '',
   flavors: [],
   newFlavor: '',
+  featured: false,
 });
 
 
@@ -60,6 +61,7 @@ const toggleModal = (product = null) => {
         capacity: product.capacity?.toString() || '',
         flavors: product.flavors || [],
         newFlavor: '',
+        featured: product.featured || false,
       });
       setEditMode(true);
       setCurrentProductId(product._id || null);
@@ -73,6 +75,7 @@ const toggleModal = (product = null) => {
         capacity: '',
         flavors: [],
         newFlavor: '',
+        featured: false,
       });
       setEditMode(false);
       setCurrentProductId(null);
@@ -249,6 +252,7 @@ const renderProducts = () => {
         <p>Sabores: {Array.isArray(product.flavors) && product.flavors.length > 0
           ? product.flavors.join(', ')
           : 'Sin sabores'}</p>
+        <p>Destacado: {product.featured ? 'Sí 🔥' : 'No'}</p>
       </div>
       <div className={styles.actions}>
         <button
@@ -409,7 +413,14 @@ return (
               Añadir Sabor
             </button>
           </div>
-
+          <div className={styles.checkboxContainer}>
+            <input
+              type="checkbox"
+              checked={newProduct.featured}
+              onChange={(e) => setNewProduct(prev => ({ ...prev, featured: e.target.checked }))}
+            />
+            <label>Agregar el producto a sección de destacados?</label>
+          </div>
           <div className={styles.modalActions}>
             <button
               className={styles.confirmBtn}

@@ -122,19 +122,29 @@ const ProductDetail = () => {
                 <div className={styles.productDetail}>
                     <div className={styles.imageContainer}>
                         <Swiper navigation modules={[Navigation]} className={styles.swiperContainer}>
-                            {product.srcImage.map((img, index) => (
-                                <SwiperSlide key={index}>
+                            {product.srcImage && product.srcImage.length > 0 ? (
+                                product.srcImage.map((img, index) => (
+                                    <SwiperSlide key={index}>
+                                        <img
+                                            src={`${process.env.REACT_APP_API_URL}${img}`}
+                                            alt={`${product.modelo} ${index}`}
+                                            className={styles.productImage}
+                                            onClick={() => setSelectedImage(img)}
+                                            onError={(e) => e.target.src = "/assets/images/default.png"}
+                                        />
+                                    </SwiperSlide>
+                                ))
+                            ) : (
+                                <SwiperSlide>
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}${img}`}
-                                        alt={`${product.modelo} ${index}`}
+                                        src="/assets/images/default.png"
+                                        alt="Imagen por defecto"
                                         className={styles.productImage}
-                                        onClick={() => setSelectedImage(img)}
                                     />
                                 </SwiperSlide>
-                            ))}
+                            )}
                         </Swiper>
                     </div>
-
                     <div className={styles.productInfo}>
                         <h1>{product.brand} {product.modelo} {product.capacity}</h1>
                         <p className={styles.price}>

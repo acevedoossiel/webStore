@@ -11,6 +11,7 @@ import { CartProvider } from './contexts/CartContext';
 import Cookies from 'js-cookie';
 import Category from './pages/Category';
 import ProductDetail from './pages/ProductDetail';
+import Featured from './pages/Featured';
 
 const AppContent = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -54,6 +55,7 @@ const AppContent = () => {
           <Route path="roles" element={<Role />} />
           <Route path="category" element={<Category />} />
           <Route path="product/:id" element={<ProductDetail />} />
+          <Route path="featured" element={<Featured />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route
