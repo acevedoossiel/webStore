@@ -9,6 +9,7 @@ const Home = () => {
   const [latestProducts, setLatestProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [featuredProducts, setFeaturedProducts] = useState([]);
 
   // Configuración del primer carrusel
   const settings1 = {
@@ -75,7 +76,21 @@ const settings2 = {
       }
     };
 
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/featured`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los productos destacados');
+        }
+        const data = await response.json();
+        setFeaturedProducts(data);
+      } catch (error) {
+        console.error('Error al obtener los productos destacados:', error);
+      }
+    };
+
     fetchLatestProducts();
+    fetchFeaturedProducts();
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -140,9 +155,35 @@ const settings2 = {
           {latestProducts.map((product, index) => (
             <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
               <img
-                src={`${process.env.REACT_APP_API_URL}${product.srcImage[0]}`}
+                src={product.srcImage && product.srcImage.length > 0
+                  ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}`
+                  : "/assets/images/default.png"} // Usa la imagen por defecto si no hay imagen
                 alt={product.modelo}
                 className={styles['product-image']}
+                onError={(e) => e.target.src = "/assets/images/default.png"} // Si hay un error al cargar, usa la imagen por defecto
+              />
+              <h3>{product.brand} {product.modelo} {product.capacity}</h3>
+              <p>MX ${product.price}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+      {/* Sección 'Destacado' */}
+      <div className={styles['contenido']}>
+        <p>
+          Destacado <span className={styles['fire-icon']}>🔥</span>
+        </p>
+        <Link to="/featured">Ver todos los productos destacados</Link>
+        <div className={styles['latest-products-container']}>
+          {featuredProducts.map((product, index) => (
+            <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
+              <img
+                src={product.srcImage && product.srcImage.length > 0
+                  ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}`
+                  : "/assets/images/default.png"} // Usa imagen por defecto si no hay imagen
+                alt={product.modelo}
+                className={styles['product-image']}
+                onError={(e) => e.target.src = "/assets/images/default.png"}
               />
               <h3>{product.brand} {product.modelo} {product.capacity}</h3>
               <p>MX ${product.price}</p>
