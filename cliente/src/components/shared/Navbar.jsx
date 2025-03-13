@@ -100,10 +100,10 @@ function Navbar() {
             <Link to="/promociones" onClick={closeMenu}>PROMOCIONES</Link>
           </li>
           <li>
-            <Link to="/vapes" onClick={closeMenu}>VAPES</Link>
+            <Link to="/featured" onClick={closeMenu}>DESTACADO 🔥</Link>
           </li>
           <li>
-            <Link to="/plumas" onClick={closeMenu}>PLUMAS</Link>
+            <Link to="/promociones" onClick={closeMenu}>PROMOCIONES POR PIEZAS</Link>
           </li>
           <li>
             <h1>CONTÁCTANOS:</h1>
