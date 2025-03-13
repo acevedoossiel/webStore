@@ -4,7 +4,7 @@ import { ProductService } from "../services/productService";
 class productController {
     async createProduct(req: Request, res: Response) {
         try {
-            const { brand, modelo, description, srcImage, price, capacity, flavors } = req.body;
+            const { brand, modelo, description, srcImage, price, capacity, flavors, featured } = req.body;
             const newProduct = await ProductService.createProduct({
                 brand,
                 modelo,
@@ -13,12 +13,13 @@ class productController {
                 price,
                 capacity,
                 flavors,
+                featured,
             });
             return res.status(201).json(newProduct);
         } catch (error: unknown) {
             console.error('Error while creating product:', error);
             if (error instanceof Error) {
-                if (error.message.includes('A product with the same brand and model already exists')) {
+                if (error.message.includes('A product with the same brand and model and capacity already exists')) {
                     return res.status(400).json({
                         message: error.message,
                     });
@@ -65,11 +66,6 @@ class productController {
             if (!productData || Object.keys(productData).length === 0) {
                 return res.status(400).json({ message: 'No data provided for update' });
             }
-
-            // if (productData.srcImage && (!Array.isArray(productData.srcImage) || productData.srcImage.length === 0)) {
-            //     return res.status(400).json({ message: 'At least one image is required' });
-            // }
-
             const updatedProduct = await ProductService.updateProductById(id, productData);
             if (!updatedProduct) {
                 return res.status(404).json({ message: 'Product not found' });
@@ -305,6 +301,16 @@ class productController {
             return res.status(500).json({ message: "Error while clearing promotions" });
         }
     }
+
+    async getFeaturedProducts(req: Request, res: Response) {
+        try {
+            const featuredProducts = await ProductService.getFeaturedProducts();
+            return res.status(200).json(featuredProducts);
+        } catch (error) {
+            return res.status(500).json({ message: "Error while getting featured products" });
+        }
+    }
+
 
 }
 

@@ -10,6 +10,7 @@ export interface IProduct extends Document {
     flavors: string[];
     hasPromotion: boolean;
     promotions: { quantity: number; price: number }[];
+    featured: boolean;
 }
 
 const productSchema = new Schema<IProduct>(
@@ -37,12 +38,14 @@ const productSchema = new Schema<IProduct>(
         price: {
             type: Number,
             required: true,
-            trim: true
+            trim: true,
+            min: 0,
         },
         capacity: {
             type: Number,
             required: true,
             trim: true,
+            min: 0,
         },
         flavors: {
             type: [String],
@@ -53,9 +56,13 @@ const productSchema = new Schema<IProduct>(
             default: false,
         },
         promotions: [{
-            quantity: { type: Number, required: true },
-            price: { type: Number, required: true }
-        }]
+            quantity: { type: Number, required: true, min: 0 },
+            price: { type: Number, required: true, min: 0 }
+        }],
+        featured: {
+            type: Boolean,
+            default: false
+        },
     },
     {
         timestamps: true,
