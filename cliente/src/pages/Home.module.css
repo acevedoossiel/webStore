@@ -2,10 +2,8 @@
 .carousel-container {
   width: 99%;
   overflow: hidden;
-  /* Hace que las imágenes no sobresalgan del contenedor */
   margin: 0 auto;
   position: relative;
-  /* Necesario para posicionar los controles de navegación */
 }
 
 .carousel-image {
@@ -20,72 +18,49 @@
   width: 90%;
   margin: 20px auto;
   background-color: #ffffff;
-  /* Fondo blanco */
   border-radius: 10px;
-  /* Bordes redondeados */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Sombra sutil */
   padding: 20px;
-  /* Espaciado alrededor del contenedor */
 }
 
 .contenido .header {
   display: flex;
-  /* Alinea los elementos en una fila */
   justify-content: space-between;
-  /* Espacia los elementos (Lo nuevo y el enlace) */
   align-items: center;
-  /* Alinea verticalmente los elementos */
 }
 
 .contenido p {
   color: #1E1E1E;
-  /* Color del texto */
   font-size: 24px;
-  /* Aumenta el tamaño del texto */
 }
 
 .contenido a {
   color: #F24822;
-  /* Color del enlace */
   text-decoration: none;
-  /* Quitar subrayado */
   font-weight: bold;
-  /* Hacerlo negrita */
   font-size: 18px;
-  /* Tamaño del texto */
   transition: color 0.3s ease;
-  /* Transición suave para el color */
 }
 
 .contenido a:hover {
   color: #D43B1B;
-  /* Color del enlace al pasar el ratón */
 }
 
 /* Contenedor de productos */
 .latest-products-container {
   display: flex;
   justify-content: flex-start;
-  /* Alinea los productos al inicio */
   flex-wrap: nowrap;
-  /* Evita que los productos se acomoden en varias filas */
   overflow-x: auto;
-  /* Activa el desplazamiento horizontal */
   padding: 10px 0;
-  /* Espaciado arriba y abajo */
   gap: 20px;
-  /* Espacio entre las tarjetas de los productos */
   margin-top: 20px;
-  /* Espaciado superior */
 }
 
 /* Tarjetas de productos */
 .product-card {
   flex: 0 0 auto;
-  /* Evita que los productos se estiren o encojan */
   width: 250px;
-  /* Puedes ajustar el tamaño de las tarjetas */
   background-color: #f9f9f9;
   padding: 10px;
   border-radius: 10px;
@@ -125,11 +100,9 @@
   width: 99%;
   margin: 0 auto;
   background-color: #3a9be1;
-  /* Fondo azul */
   padding: 10px 0;
   position: relative;
   overflow: hidden;
-  /* Ocultamos cualquier exceso */
 }
 
 /* Carrusel (slick) */
@@ -169,13 +142,37 @@
   right: 10px;
 }
 
+.imageContainer {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.imageContainer img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.offerBadge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 80px;
+  height: auto;
+}
+
+.offerBadge img {
+  width: 100%;
+  height: auto;
+}
+
+
 /* Responsividad */
 @media (max-width: 1024px) {
   .second-carousel-container {
     width: 99%;
-    /* Reducimos un poco el ancho para evitar bordes pegados */
     margin: 0 auto;
-    /* Centramos bien el carrusel */
   }
 
   .second-carousel-slider {
@@ -192,7 +189,6 @@
 
   .second-carousel-container {
     min-height: 250px;
-    /* Reducimos la altura */
     padding: 10px 0;
   }
 
@@ -212,13 +208,11 @@
 
   .second-carousel-container {
     min-height: auto;
-    /* Antes estaba más alto */
     padding: 10px 0;
   }
 
   .second-carousel-slider {
     width: 100%;
-    /* Aseguramos que ocupe toda la pantalla */
     max-width: 100%;
     margin: 0 auto;
   }

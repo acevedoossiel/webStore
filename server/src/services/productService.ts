@@ -8,7 +8,7 @@ class productService {
         brand: string;
         modelo: string;
         description: string;
-        srcImage?: string[]; // Ahora es opcional
+        srcImage?: string[];
         price: number;
         capacity: number;
         flavors?: string[];
@@ -161,7 +161,7 @@ class productService {
             // Eliminar físicamente la imagen antigua del servidor
             const filePath = path.resolve('uploads/images', path.basename(oldImageUrl));
             if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath); // Borra el archivo del servidor
+                fs.unlinkSync(filePath);
             } else {
                 console.log(`Archivo no encontrado para eliminar: ${filePath}`);
             }
@@ -223,7 +223,6 @@ class productService {
 
     async getLatestProducts() {
         try {
-            // Realizamos la consulta para obtener los tres productos más recientes
             const latestProducts = await productModel.find().sort({ createdAt: -1 }).limit(8);
             return latestProducts;
         } catch (error) {
@@ -334,6 +333,13 @@ class productService {
         }
     }
 
+    async getPromotionsProducts() {
+        try {
+            return await productModel.find({ hasPromotion: true });
+        } catch (error) {
+            throw new Error("Error while getting featured products");
+        }
+    }
 
 }
 
