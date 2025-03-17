@@ -10,53 +10,54 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [promotionsProducts, setPromotionsProducts] = useState([]);
 
   // Configuración del primer carrusel
   const settings1 = {
     dots: true,
     infinite: true,
-    autoplay: true, 
-    speed:1000,
+    autoplay: true,
+    speed: 1000,
     autoplaySpeed: 5000,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
 
   // Configuración del segundo carrusel (con varias imágenes visibles)
-const settings2 = {
-  dots: false,
-  infinite: true,
-  autoplay: true, 
-  speed: 1500,
-  autoplaySpeed: 2000,
-  slidesToShow: 2.93, // Mostrar 3 imágenes al mismo tiempo
-  slidesToScroll: 1,
-  centerMode: true, // Permite que las imágenes de los lados sean visibles
-  centerPadding: "10%", // Espaciado en los lados para la vista previa
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2.93,
-        centerPadding: "1%",
+  const settings2 = {
+    dots: false,
+    infinite: true,
+    autoplay: true,
+    speed: 1500,
+    autoplaySpeed: 2000,
+    slidesToShow: 2.93, // Mostrar 3 imágenes al mismo tiempo
+    slidesToScroll: 1,
+    centerMode: true, // Permite que las imágenes de los lados sean visibles
+    centerPadding: "10%", // Espaciado en los lados para la vista previa
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2.93,
+          centerPadding: "1%",
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2.225,
+          centerPadding: "0px",
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1.625,
+          centerPadding: "0px", // En móvil, solo se muestra una imagen
+        }
       }
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 2.225,
-        centerPadding: "0px",
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1.625,
-        centerPadding: "0px", // En móvil, solo se muestra una imagen
-      }
-    }
-  ]
-};
+    ]
+  };
 
 
   useEffect(() => {
@@ -89,8 +90,22 @@ const settings2 = {
       }
     };
 
+    const fetchPromotionsProducts = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/promotion`);
+        if (!response.ok) {
+          throw new Error('Error al obtener los productos con promociones');
+        }
+        const data = await response.json();
+        setPromotionsProducts(data);
+      } catch (error) {
+        console.error('Error al obtener los productos con promociones:', error);
+      }
+    };
+
     fetchLatestProducts();
     fetchFeaturedProducts();
+    fetchPromotionsProducts();
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -120,31 +135,31 @@ const settings2 = {
       </div>
 
       {/* Segundo carrusel */}
-    <div className={styles['second-carousel-container']}>
-      <Slider {...settings2} className={styles['second-carousel-slider']}>
-        <div>
-          <img
-            src="/assets/images/carruselProducts/carrusel1.png"
-            alt="Carrusel 1"
-            className={styles['carousel-image2']}
-          />
-        </div>
-        <div>
-          <img
-            src="/assets/images/carruselProducts/carrusel2.png"
-            alt="Carrusel 2"
-            className={styles['carousel-image2']}
-          />
-        </div>
-        <div>
-          <img
-            src="/assets/images/carruselProducts/carrusel3.png"
-            alt="Carrusel 3"
-            className={styles['carousel-image2']}
-          />
-        </div>
-      </Slider>
-    </div>
+      <div className={styles['second-carousel-container']}>
+        <Slider {...settings2} className={styles['second-carousel-slider']}>
+          <div>
+            <img
+              src="/assets/images/carruselProducts/carrusel1.png"
+              alt="Carrusel 1"
+              className={styles['carousel-image2']}
+            />
+          </div>
+          <div>
+            <img
+              src="/assets/images/carruselProducts/carrusel2.png"
+              alt="Carrusel 2"
+              className={styles['carousel-image2']}
+            />
+          </div>
+          <div>
+            <img
+              src="/assets/images/carruselProducts/carrusel3.png"
+              alt="Carrusel 3"
+              className={styles['carousel-image2']}
+            />
+          </div>
+        </Slider>
+      </div>
 
 
       {/* Sección 'Lo nuevo' */}
@@ -168,6 +183,7 @@ const settings2 = {
           ))}
         </div>
       </div>
+
       {/* Sección 'Destacado' */}
       <div className={styles['contenido']}>
         <p>
@@ -185,6 +201,36 @@ const settings2 = {
                 className={styles['product-image']}
                 onError={(e) => e.target.src = "/assets/images/default.png"}
               />
+              <h3>{product.brand} {product.modelo} {product.capacity}</h3>
+              <p>MX ${product.price}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Sección 'Promociones' */}
+      <div className={styles['contenido']}>
+        <p>
+          Promociones <span className={styles['fire-icon']}>🎉</span>
+        </p>
+        <Link to="/promotions">Ver todos los productos en promociones</Link>
+        <div className={styles['latest-products-container']}>
+          {promotionsProducts.map((product, index) => (
+            <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
+              <div className={styles['imageContainer']}>
+                <img
+                  src={product.srcImage && product.srcImage.length > 0
+                    ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}`
+                    : "/assets/images/default.png"}
+                  alt={product.modelo}
+                  className={styles['product-image']}
+                  onError={(e) => e.target.src = "/assets/images/default.png"}
+                />
+                {/* 📌 Imagen de oferta especial en la esquina inferior derecha */}
+                <div className={styles['offerBadge']}>
+                  <img src="/assets/images/logos/oferta.png" alt="Oferta especial" />
+                </div>
+              </div>
               <h3>{product.brand} {product.modelo} {product.capacity}</h3>
               <p>MX ${product.price}</p>
             </Link>

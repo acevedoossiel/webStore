@@ -311,6 +311,14 @@ class productController {
         }
     }
 
+    async getPromotionsProducts(req: Request, res: Response) {
+        try {
+            const promotionProducts = await ProductService.getPromotionsProducts();
+            return res.status(200).json(promotionProducts);
+        } catch (error) {
+            return res.status(500).json({ message: "Error while getting promotion products" });
+        }
+    }
 
 }
 

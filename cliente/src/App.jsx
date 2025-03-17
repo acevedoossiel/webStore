@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import Category from './pages/Category';
 import ProductDetail from './pages/ProductDetail';
 import Featured from './pages/Featured';
+import Promotions from './pages/Promotions'
 
 const AppContent = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -56,6 +57,7 @@ const AppContent = () => {
           <Route path="category" element={<Category />} />
           <Route path="product/:id" element={<ProductDetail />} />
           <Route path="featured" element={<Featured />} />
+          <Route path="promotions" element={<Promotions />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route

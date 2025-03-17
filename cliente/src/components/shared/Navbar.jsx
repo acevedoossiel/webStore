@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { PiHandbagFill } from "react-icons/pi";
 import { LuMenu } from "react-icons/lu";
 import CartSidebar from "../CartSidebar";
-import { useCart } from "../../contexts/CartContext";  // No es necesario importar getTotalItems aquí
+import { useCart } from "../../contexts/CartContext";
 import styles from './Navbar.module.css';
 
 function Navbar() {
@@ -13,11 +13,9 @@ function Navbar() {
     backup: '',
     number: ''
   });
-  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para abrir/cerrar el carrito
-  
-  // Usar el contexto del carrito
-  const { cartItems, removeFromCart, getTotalItems } = useCart(); // Ahora getTotalItems viene desde el contexto
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
+  const { cartItems, removeFromCart, getTotalItems } = useCart();
   const whatsappMessage = 'Hola, quiero más información.';
 
   const toggleMenu = () => {
@@ -97,13 +95,10 @@ function Navbar() {
             <Link to="/category" onClick={closeMenu}>CATÁLOGO</Link>
           </li>
           <li>
-            <Link to="/promociones" onClick={closeMenu}>PROMOCIONES</Link>
-          </li>
-          <li>
             <Link to="/featured" onClick={closeMenu}>DESTACADO 🔥</Link>
           </li>
           <li>
-            <Link to="/promociones" onClick={closeMenu}>PROMOCIONES POR PIEZAS</Link>
+            <Link to="/promotions" onClick={closeMenu}>PROMOCIONES POR PIEZAS</Link>
           </li>
           <li>
             <h1>CONTÁCTANOS:</h1>
