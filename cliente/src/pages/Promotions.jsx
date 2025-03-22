@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import styles from './Promotions.module.css';
 
 const Promotions = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -27,11 +30,19 @@ const Promotions = () => {
         fetchProducts();
     }, []);
 
-    if (loading) return <p>Loading...</p>; 
+    const goBack = () => {
+        navigate(-1);
+    };
+
+    if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
 
     return (
         <div className={styles.FeaturedContainer}>
+            <button className={styles.goBackButton} onClick={goBack}>
+                <AiOutlineArrowLeft size={24} /> Volver
+            </button>
+
             <h1>🎉 Productos en promoción 🎉</h1>
             <div className={styles.productList}>
                 {products && products.length > 0 ? (
