@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import styles from './Featured.module.css';
 
 const Featured = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -27,12 +30,18 @@ const Featured = () => {
         fetchProducts();
     }, []);
 
+    const goBack = () => {
+        navigate(-1);
+    };
 
-    if (loading) return <p>Loading...</p>; 
+    if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
 
     return (
         <div className={styles.FeaturedContainer}>
+            <button className={styles.goBackButton} onClick={goBack}>
+                <AiOutlineArrowLeft size={24} /> Volver
+            </button>
             <h1>Productos destacados 🔥</h1>
             <div className={styles.productList}>
                 {products && products.length > 0 ? (

@@ -72,9 +72,6 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-userSchema.index({ email: 1 });
-userSchema.index({ phone: 1 });
-
 const userModel = model<IUser>('User', userSchema);
 
 export default userModel;
