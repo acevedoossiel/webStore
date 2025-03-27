@@ -329,22 +329,33 @@ h1 {
 }
 
 .cartBtn {
-    position: relative; /* Necesario para posicionar el contador relativo al botón */
-  }
-  
-  .cartCount {
+    position: relative;
+    /* Necesario para posicionar el contador relativo al botón */
+}
+
+.cartCount {
     position: absolute;
-    bottom: 0; /* Posiciona el contador en la esquina inferior */
-    left: 0; /* Posiciona el contador en la esquina izquierda */
-    background-color: red; /* Fondo del contador */
-    color: white; /* Color del texto */
-    font-size: 12px; /* Tamaño del texto */
-    width: 18px; /* Ancho del círculo */
-    height: 18px; /* Alto del círculo */
-    border-radius: 50%; /* Hace que sea redondo */
+    bottom: 0;
+    /* Posiciona el contador en la esquina inferior */
+    left: 0;
+    /* Posiciona el contador en la esquina izquierda */
+    background-color: red;
+    /* Fondo del contador */
+    color: white;
+    /* Color del texto */
+    font-size: 12px;
+    /* Tamaño del texto */
+    width: 18px;
+    /* Ancho del círculo */
+    height: 18px;
+    /* Alto del círculo */
+    border-radius: 50%;
+    /* Hace que sea redondo */
     display: flex;
-    justify-content: center; /* Centra el texto horizontalmente */
-    align-items: center; /* Centra el texto verticalmente */
-    font-weight: bold; /* Hace que el número se vea más destacado */
-  }
-  
+    justify-content: center;
+    /* Centra el texto horizontalmente */
+    align-items: center;
+    /* Centra el texto verticalmente */
+    font-weight: bold;
+    /* Hace que el número se vea más destacado */
+}

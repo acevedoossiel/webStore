@@ -118,14 +118,14 @@ const Home = () => {
         <Slider {...settings1}>
           <div>
             <img
-              src="/assets/images/banners/Banner1.jpg"
+              src="/assets/images/banners/Banner11.jpg"
               alt="Carrusel 1"
               className={styles['carousel-image']}
             />
           </div>
           <div>
             <img
-              src="/assets/images/banners/Banner2.jpg"
+              src="/assets/images/banners/Banner22.jpg"
               alt="Carrusel 2"
               className={styles['carousel-image']}
             />
@@ -189,7 +189,7 @@ const Home = () => {
         <p>
           Destacado <span className={styles['fire-icon']}>🔥</span>
         </p>
-        <Link to="/featured">Ver todos los productos destacados</Link>
+        <Link to="/featured">Ver todos los destacados</Link>
         <div className={styles['latest-products-container']}>
           {featuredProducts.map((product, index) => (
             <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
@@ -213,7 +213,7 @@ const Home = () => {
         <p>
           Promociones <span className={styles['fire-icon']}>🎉</span>
         </p>
-        <Link to="/promotions">Ver todos los productos en promociones</Link>
+        <Link to="/promotions">Ver todas las promociones</Link>
         <div className={styles['latest-products-container']}>
           {promotionsProducts.map((product, index) => (
             <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>

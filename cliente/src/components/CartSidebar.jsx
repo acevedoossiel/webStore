@@ -45,14 +45,14 @@ const CartSidebar = ({ isOpen, onClose }) => {
     const handleCheckout = () => {
         let message = "¡Hola! Quiero hacer un pedido:\n\n";
         cartItems.forEach(item => {
-            message += `Producto: ${item.name}\n`;
-            message += `Sabor: ${item.flavor}\n`;
-            message += `Precio unitario: ${getPriceWithPromotion(item.price, cartItems, item.promotions).toFixed(2)} MX\n`;
-            message += `Cantidad: ${item.quantity}\n`;
+            message += `*Producto*: ${item.name}\n`;
+            message += `*Sabor*: ${item.flavor}\n`;
+            message += `*Precio unitario*: ${getPriceWithPromotion(item.price, cartItems, item.promotions).toFixed(2)} MX\n`;
+            message += `*Cantidad*: ${item.quantity}\n`;
             const itemTotal = getPriceWithPromotion(item.price, cartItems, item.promotions) * item.quantity;
-            message += `Precio total: $${itemTotal.toFixed(2)}\n\n`;
+            message += `*Precio total*: $${itemTotal.toFixed(2)}\n\n`;
         });
-        message += `Precio total del pedido: $${totalPrice.toFixed(2)}\n\nGracias por su atención!`;
+        message += `*Precio total del pedido*: $${totalPrice.toFixed(2)}\n\nGracias por su atención!`;
 
         const encodedMessage = encodeURIComponent(message);
         const phoneNumber = links.number;
