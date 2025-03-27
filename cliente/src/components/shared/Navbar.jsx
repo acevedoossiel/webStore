@@ -98,7 +98,7 @@ function Navbar() {
             <Link to="/featured" onClick={closeMenu}>DESTACADO 🔥</Link>
           </li>
           <li>
-            <Link to="/promotions" onClick={closeMenu}>PROMOCIONES POR PIEZAS</Link>
+            <Link to="/promotions" onClick={closeMenu}>PROMOCIONES</Link>
           </li>
           <li>
             <h1>CONTÁCTANOS:</h1>

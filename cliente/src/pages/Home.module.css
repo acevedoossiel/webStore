@@ -6,6 +6,12 @@
   position: relative;
 }
 
+/* Esto evita el desbordamiento horizontal en todo el documento */
+html,
+body {
+  overflow-x: hidden;
+}
+
 .carousel-image {
   width: 100%;
   height: auto;
@@ -15,12 +21,12 @@
 
 /* Sección 'Lo nuevo' */
 .contenido {
-  width: 90%;
+  width: 99%;
   margin: 20px auto;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  padding: 7px;
 }
 
 .contenido .header {
@@ -38,7 +44,7 @@
   color: #F24822;
   text-decoration: none;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 17px;
   transition: color 0.3s ease;
 }
 
@@ -60,7 +66,7 @@
 /* Tarjetas de productos */
 .product-card {
   flex: 0 0 auto;
-  width: 250px;
+  width: 180px;
   background-color: #f9f9f9;
   padding: 10px;
   border-radius: 10px;
@@ -90,6 +96,7 @@
 .product-card p {
   margin: 5px 0;
   color: #F24822;
+  font-size: 19px;
   font-weight: bold;
 }
 
