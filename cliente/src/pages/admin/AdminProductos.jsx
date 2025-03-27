@@ -195,6 +195,33 @@ const handleEditProduct = async () => {
   }
 };
 
+const handleDeleteImage = async (imageToDelete) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/removeImage/${currentProductId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ imageUrl: imageToDelete }),
+    });
+
+    if (!response.ok) throw new Error('Error al eliminar la imagen');
+
+    const data = await response.json();
+
+    // Actualizar el estado local con las imágenes devueltas por el backend
+    setNewProduct((prev) => ({
+      ...prev,
+      srcImage: data.data.srcImage,
+    }));
+
+    console.log('✅ Imagen eliminada correctamente');
+  } catch (error) {
+    console.error('❌ Error al eliminar la imagen:', error);
+  }
+};
+
+
 
 const handleDeleteProduct = async () => {
   try {
@@ -342,12 +369,7 @@ return (
                     }}
                   />
                     <button
-                      onClick={() =>
-                        setNewProduct((prev) => ({
-                          ...prev,
-                          srcImage: prev.srcImage.filter((_, i) => i !== index),
-                        }))
-                      }
+                      onClick={() => handleDeleteImage(image)}
                       className={styles.deleteFlavorBtn}
                     >
                       Eliminar
