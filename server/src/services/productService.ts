@@ -211,15 +211,32 @@ class productService {
 
     async deleteProductById(id: string) {
         try {
-            const deletedProduct = await productModel.findByIdAndDelete(id);
-            if (!deletedProduct) {
+            const product = await productModel.findById(id);
+
+            if (!product) {
                 throw new Error('Product not found');
             }
+
+            if (Array.isArray(product.srcImage)) {
+                for (const imagePath of product.srcImage) {
+                    const filePath = path.resolve('uploads/images', path.basename(imagePath));
+                    if (fs.existsSync(filePath)) {
+                        try {
+                            fs.unlinkSync(filePath);
+                        } catch (unlinkError) {
+                            console.warn(`⚠️ No se pudo eliminar la imagen: ${filePath}`, unlinkError);
+                        }
+                    }
+                }
+            }
+            const deletedProduct = await productModel.findByIdAndDelete(id);
+
             return deletedProduct;
         } catch (error) {
-            throw new Error('Error while deleting product by id');
+            throw new Error('Error while deleting product and images');
         }
     }
+
 
     async getLatestProducts() {
         try {
