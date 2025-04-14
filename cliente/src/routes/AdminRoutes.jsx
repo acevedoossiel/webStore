@@ -7,6 +7,7 @@ import AgregarPromocion from '../pages/admin/AgregarPromocion';
 import AdminRedes from '../pages/admin/AdminRedes';
 import AdminSettings from '../pages/admin/AdminSettings';
 import SecondLayout from '../components/layouts/SecondLayout';
+import AdminCarousel from '../pages/admin/AdminCarousel';
 
 function AdminRoutes() {
     const { isAuthenticated } = useAuth();
@@ -24,6 +25,7 @@ function AdminRoutes() {
                 <Route path="redes" element={<AdminRedes />} />
                 <Route path="settings" element={<AdminSettings />} />
                 <Route path="/" element={<Navigate to="productos" />} />
+                <Route path="carrusel" element={<AdminCarousel />} />
             </Route>
         </Routes>
     );

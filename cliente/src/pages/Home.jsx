@@ -11,6 +11,8 @@ const Home = () => {
   const [error, setError] = useState('');
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [promotionsProducts, setPromotionsProducts] = useState([]);
+  const [mainCarouselImages, setMainCarouselImages] = useState([]);
+  const [secondaryCarouselImages, setSecondaryCarouselImages] = useState([]);
 
   // Configuración del primer carrusel
   const settings1 = {
@@ -103,6 +105,28 @@ const Home = () => {
       }
     };
 
+    const fetchCarouselImages = async () => {
+      try {
+        const [mainRes, secondaryRes] = await Promise.all([
+          fetch(`${process.env.REACT_APP_API_URL}/api/carousel/main`),
+          fetch(`${process.env.REACT_APP_API_URL}/api/carousel/secondary`)
+        ]);
+    
+        if (!mainRes.ok || !secondaryRes.ok) {
+          throw new Error('Error al obtener las imágenes del carrusel');
+        }
+    
+        const mainData = await mainRes.json();
+        const secondaryData = await secondaryRes.json();
+    
+        setMainCarouselImages(mainData.images || []);
+        setSecondaryCarouselImages(secondaryData.images || []);
+      } catch (err) {
+        console.error('Error al obtener las imágenes del carrusel:', err);
+      }
+    };
+    
+    fetchCarouselImages();
     fetchLatestProducts();
     fetchFeaturedProducts();
     fetchPromotionsProducts();
@@ -116,20 +140,16 @@ const Home = () => {
       {/* Primer carrusel */}
       <div className={styles['carousel-container']}>
         <Slider {...settings1}>
-          <div>
-            <img
-              src="/assets/images/banners/Banner11.jpg"
-              alt="Carrusel 1"
-              className={styles['carousel-image']}
-            />
-          </div>
-          <div>
-            <img
-              src="/assets/images/banners/Banner22.jpg"
-              alt="Carrusel 2"
-              className={styles['carousel-image']}
-            />
-          </div>
+          {mainCarouselImages.map((imgUrl, index) => (
+            <div key={index}>
+              <img
+                src={`${process.env.REACT_APP_API_URL}${imgUrl}`}
+                alt={`Carrusel Main ${index + 1}`}
+                className={styles['carousel-image']}
+                onError={(e) => e.currentTarget.src = "/assets/images/default.png"}
+              />
+            </div>
+          ))}
         </Slider>
         <br /><br />
       </div>
@@ -137,27 +157,16 @@ const Home = () => {
       {/* Segundo carrusel */}
       <div className={styles['second-carousel-container']}>
         <Slider {...settings2} className={styles['second-carousel-slider']}>
-          <div>
-            <img
-              src="/assets/images/carruselProducts/carrusel1.png"
-              alt="Carrusel 1"
-              className={styles['carousel-image2']}
-            />
-          </div>
-          <div>
-            <img
-              src="/assets/images/carruselProducts/carrusel2.png"
-              alt="Carrusel 2"
-              className={styles['carousel-image2']}
-            />
-          </div>
-          <div>
-            <img
-              src="/assets/images/carruselProducts/carrusel3.png"
-              alt="Carrusel 3"
-              className={styles['carousel-image2']}
-            />
-          </div>
+          {secondaryCarouselImages.map((imgUrl, index) => (
+            <div key={index}>
+              <img
+                src={`${process.env.REACT_APP_API_URL}${imgUrl}`}
+                alt={`Carrusel Secondary ${index + 1}`}
+                className={styles['carousel-image2']}
+                onError={(e) => e.currentTarget.src = "/assets/images/default.png"}
+              />
+            </div>
+          ))}
         </Slider>
       </div>
 

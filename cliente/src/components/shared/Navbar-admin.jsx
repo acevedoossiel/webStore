@@ -10,7 +10,8 @@ const ConfirmLogoutDialog = lazy(() => import('./ConfirmLogoutDialog'));
 const NAV_ITEMS = [
     { to: "/admin", label: "PRODUCTOS" },
     { to: "/admin/promociones", label: "PROMOCIONES" },
-    { to: "/admin/redes", label: "REDES" }
+    { to: "/admin/redes", label: "REDES" },
+    { to: "/admin/carrusel", label: "CARRUSEL" }
 ];
 
 function NavbarAdmin() {
@@ -45,7 +46,7 @@ function NavbarAdmin() {
 
                 <NavLink to="/admin" className={styles.navbarLogo}>
                     <img
-                        src="/assets/images/banners/navbar2.jpg"
+                        src="/assets/images/navbar/navbar2.jpg"
                         alt="Onlyvapes Logo"
                         className={styles.logoImage}
                     />
