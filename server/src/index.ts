@@ -8,6 +8,7 @@ import RoleRoutes from './routes/roleRoute';
 import UserRoutes from './routes/userRoute';
 import ProductRoutes from './routes/productRoute';
 import SocialRoutes from './routes/socialRoute';
+import carouselRoute from './routes/carouselRoute';
 import path from 'path';
 
 dotenv.config();
@@ -36,6 +37,7 @@ class Server {
         this.app.use('/api/users', UserRoutes);
         this.app.use('/api/products', ProductRoutes);
         this.app.use('/api/links', SocialRoutes);
+        this.app.use('/api/carousel', carouselRoute);
     }
 
     start(): void {
