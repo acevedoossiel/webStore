@@ -134,5 +134,5 @@ build/
 pnpm-lock.yaml
 
 # Ignorar imágenes subidas por el admin
-server/uploads/images/
+#server/uploads/images/
 
