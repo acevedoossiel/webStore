@@ -72,7 +72,7 @@ function Navbar() {
 
         <Link to="/" className={styles.navbarLogo}>
           <img
-            src="/assets/images/navbar/navbar.jpg"
+            src="/assets/images/banners/navbar.jpg"
             alt="Onlyvapes Logo"
             className={styles.logoImage}
           />

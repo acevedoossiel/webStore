@@ -46,7 +46,7 @@ function NavbarAdmin() {
 
                 <NavLink to="/admin" className={styles.navbarLogo}>
                     <img
-                        src="/assets/images/navbar/navbar2.jpg"
+                        src="/assets/images/banners/navbar2.jpg"
                         alt="Onlyvapes Logo"
                         className={styles.logoImage}
                     />
