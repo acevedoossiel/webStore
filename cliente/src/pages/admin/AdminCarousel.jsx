@@ -72,7 +72,7 @@ const AdminCarousel = () => {
       <div className={styles.imageList}>
         {images.map((url, index) => (
           <div key={index} className={styles.imageItem}>
-            <img src={`${process.env.REACT_APP_API_URL}${url}`} alt={`img-${index}`} className={styles.carouselImg} />
+            <img src={`${url}`} alt={`img-${index}`} className={styles.carouselImg} />
             <button onClick={() => handleDelete(url)}>Eliminar</button>
           </div>
         ))}

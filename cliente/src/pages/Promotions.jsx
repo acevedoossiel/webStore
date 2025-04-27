@@ -51,7 +51,7 @@ const Promotions = () => {
                             <Link to={`/product/${product._id}`}>
                                 <div className={styles.imageContainer}>
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}${product.srcImage[0]}`}
+                                        src={`${product.srcImage[0]}`}
                                         alt={product.modelo}
                                     />
                                     <div className={styles.offerBadge}>

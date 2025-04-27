@@ -87,7 +87,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                         return (
                             <li key={`${item.id}-${item.flavor}`} className={styles.cartItem}>
                                 <img
-                                    src={`${process.env.REACT_APP_API_URL}${item.image}`}
+                                    src={`${item.image}`}
                                     alt={item.name}
                                     className={styles.itemImage}
                                 />

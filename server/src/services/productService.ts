@@ -1,8 +1,11 @@
 import productModel from "../models/productModel";
 import fs from 'fs';
 import path from 'path';
-
+import cloudinary from "cloudinary";
 class productService {
+    replaceImage(id: string, oldImageUrl: any, newImageUrl: string) {
+        throw new Error("Method not implemented.");
+    }
 
     async createProduct(productData: {
         brand: string;
@@ -81,30 +84,33 @@ class productService {
     }
 
 
-    async addImageToProduct(productId: string, imageUrl: string) {
+    async addImageToProduct(productId: string, image: string) {
         try {
-            if (!imageUrl) {
-                throw new Error("❌ Error: La URL de la imagen es undefined.");
-            }
-
-            // Agregar la URL de la imagen al array `srcImage` en MongoDB
+            const result = await cloudinary.v2.uploader.upload(image);
+    
+            const imageUrl = result.secure_url;
+    
             const updatedProduct = await productModel.findByIdAndUpdate(
                 productId,
                 { $addToSet: { srcImage: imageUrl } },
                 { new: true }
             );
-
+    
             if (!updatedProduct) {
                 throw new Error("❌ Error: Producto no encontrado.");
             }
-
+    
+            // Solo intenta borrar si es una ruta local
+            if (image.startsWith('./') || image.startsWith('uploads/')) {
+                fs.unlinkSync(image);
+            }
+    
             return updatedProduct;
         } catch (error) {
-            throw new Error("❌ Error while adding image to product");
+            throw new Error("❌ Error while adding image to product: ");
         }
     }
-
-
+    
 
     async removeImageFromProduct(productId: string, imageUrl: string) {
         try {
@@ -119,38 +125,37 @@ class productService {
                 throw new Error('Product not found');
             }
 
-            // Eliminar el archivo físico
-            const filePath = path.resolve('uploads/images', path.basename(imageUrl));
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath); // Borra el archivo del servidor
+            // Eliminar la imagen de Cloudinary
+            const publicId = imageUrl.split('/').pop()?.split('.')[0]; // Extraer el public_id de la URL
+            if (publicId) {
+                await cloudinary.v2.uploader.destroy(publicId);
             }
 
             return updatedProduct;
         } catch (error) {
-            throw new Error(`Error while removing image from product: ${error}`);
+            throw new Error(`❌ Error while removing image from product`);
         }
     }
 
-    async replaceImageInProduct(productId: string, oldImageUrl: string, file: Express.Multer.File) {
+    async replaceImageInProduct(productId: string, oldImageUrl: string, newImage: Express.Multer.File) {
         try {
-            // Generar la URL basada en la ubicación del archivo
-            const newImageUrl = `/uploads/images/${file.filename}`;
+            // Subir la nueva imagen a Cloudinary
+            const result = await cloudinary.v2.uploader.upload(newImage.path);
 
-            // Paso 1: Eliminar la imagen antigua de la base de datos
-            const product = await productModel.findByIdAndUpdate(
-                productId,
-                { $pull: { srcImage: oldImageUrl } },
-                { new: true }
-            );
+            const newImageUrl = result.secure_url;
+            const publicId = oldImageUrl.split('/').pop()?.split('.')[0]; // Extraer el public_id de la URL
 
-            if (!product) {
-                throw new Error('Product not found');
+            if (!publicId) {
+                throw new Error("Error al obtener el public_id de la imagen antigua.");
             }
 
-            // Paso 2: Agregar la nueva imagen a la base de datos
+            // Eliminar la imagen antigua de Cloudinary
+            await cloudinary.v2.uploader.destroy(publicId);
+
+            // Reemplazar la imagen en la base de datos
             const updatedProduct = await productModel.findByIdAndUpdate(
                 productId,
-                { $addToSet: { srcImage: newImageUrl } },
+                { $set: { 'srcImage.$': newImageUrl } },
                 { new: true }
             );
 
@@ -158,24 +163,15 @@ class productService {
                 throw new Error('Failed to add the new image');
             }
 
-            // Eliminar físicamente la imagen antigua del servidor
-            const filePath = path.resolve('uploads/images', path.basename(oldImageUrl));
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            } else {
-                console.log(`Archivo no encontrado para eliminar: ${filePath}`);
-            }
+            // Eliminar el archivo físico del servidor
+            fs.unlinkSync(newImage.path);
 
             return updatedProduct;
         } catch (error) {
             console.error('Error while replacing image in product:', error);
-            throw new Error(`Error while replacing image in product`);
+            throw new Error(`❌ Error while replacing image in product`);
         }
     }
-
-
-
-
 
     async addFlavorToProduct(productId: string, flavor: string) {
         try {

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ProductService } from "../services/productService";
-
+import cloudinary from "../lib/cloudinary";
+import fs from 'fs';
 class productController {
     async createProduct(req: Request, res: Response) {
         try {
@@ -83,14 +84,26 @@ class productController {
         try {
             const { id } = req.params;
 
-            if (!req.file || !req.file.filename) {
-                return res.status(400).json({ message: "❌ No se recibió un archivo válido." });
+            const file = req.file as Express.Multer.File | undefined;
+
+            if (!file) {
+                return res.status(400).json({ message: 'No se recibió imagen' });
             }
 
-            // Generar la URL correctamente
-            const imageUrl = `/uploads/images/${req.file.filename}`;
+            // Subir a Cloudinary
+            const result = await new Promise<any>((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    { resource_type: 'image' },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+                uploadStream.end(file.buffer);
+            });
 
-            // Llamar al servicio con la URL en lugar del archivo
+            const imageUrl = result.secure_url;
+
             const updatedProduct = await ProductService.addImageToProduct(id, imageUrl);
 
             return res.status(200).json({
@@ -103,8 +116,6 @@ class productController {
         }
     }
 
-
-
     async removeImage(req: Request, res: Response) {
         try {
             const { id } = req.params;
@@ -114,13 +125,26 @@ class productController {
                 return res.status(400).json({ message: 'Image URL is required' });
             }
 
+            // Extraer el public_id de la URL de Cloudinary (esto es necesario para eliminar la imagen)
+            const public_id = imageUrl.split('/').pop()?.split('.')[0];  // Asumiendo que la URL es algo como 'https://res.cloudinary.com/demo/image/upload/v1234567890/sample.jpg'
+
+            if (!public_id) {
+                return res.status(400).json({ message: 'Invalid image URL' });
+            }
+
+            // Eliminar la imagen de Cloudinary
+            await cloudinary.uploader.destroy(public_id);
+
+            // Llamar al servicio para eliminar la URL de la imagen del producto
             const updatedProduct = await ProductService.removeImageFromProduct(id, imageUrl);
+
             return res.status(200).json({
                 message: 'Image removed successfully',
                 data: updatedProduct,
             });
         } catch (error) {
-            return res.status(500).json({ message: `Error while removing image from product` });
+            console.error("❌ Error al eliminar la imagen de Cloudinary:", error);
+            return res.status(500).json({ message: "Error while removing image from product" });
         }
     }
 
@@ -129,33 +153,30 @@ class productController {
             const { id } = req.params;
             const { oldImageUrl } = req.body;
 
-            if (!oldImageUrl) {
-                return res.status(400).json({ message: 'Old image URL is required' });
+            if (!req.file || !req.file.path) {
+                return res.status(400).json({ message: "❌ No se recibió un archivo válido." });
             }
 
-            // Determina la nueva URL de la imagen
-            const newImageUrl = req.file
-                ? `/uploads/images/${req.file.filename}` // Si se subió un archivo
-                : req.body.newImageUrl; // Si se proporcionó una URL en el cuerpo
+            // Subir la nueva imagen
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: "products",
+            });
 
-            if (!newImageUrl) {
-                return res.status(400).json({ message: 'New image URL is required' });
-            }
+            fs.unlinkSync(req.file.path);
 
-            // Llama al servicio para reemplazar la imagen
-            const updatedProduct = await ProductService.replaceImageInProduct(id, oldImageUrl, newImageUrl);
+            const newImageUrl = result.secure_url;
+
+            const updatedProduct = await ProductService.replaceImage(id, oldImageUrl, newImageUrl);
 
             return res.status(200).json({
-                message: 'Image replaced successfully',
+                message: "✅ Imagen reemplazada correctamente",
                 data: updatedProduct,
             });
         } catch (error) {
-            console.error('Error while replacing image:', error);
-            return res.status(500).json({ message: `Error while replacing image in product` });
+            console.error("❌ Error al reemplazar la imagen:", error);
+            return res.status(500).json({ message: "Error al reemplazar la imagen" });
         }
     }
-
-
 
     async addFlavor(req: Request, res: Response) {
         try {

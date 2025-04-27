@@ -1,15 +1,7 @@
 import multer from 'multer';
-import path from 'path';
 
-// Configuración del almacenamiento
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.resolve('uploads/images')); // Carpeta para guardar las imágenes
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Nombre único para cada archivo
-    },
-});
+// Configuración del almacenamiento en memoria
+const storage = multer.memoryStorage(); // <<<<<< Aquí cambia
 
 // Validación del tipo de archivo
 const fileFilter = (req: any, file: any, cb: any) => {
@@ -21,6 +13,7 @@ const fileFilter = (req: any, file: any, cb: any) => {
     }
 };
 
+// Multer configurado
 const imageUpload = multer({
     storage,
     fileFilter,

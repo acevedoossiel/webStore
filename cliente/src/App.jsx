@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import MainLayout from './components/layouts/MainLayout';
 import Home from './pages/Home';
 import About from './pages/About';
-import Role from './pages/Role';
 import AdminRoutes from './routes/AdminRoutes';
 import Login from './pages/admin/Login';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -53,7 +52,6 @@ const AppContent = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="roles" element={<Role />} />
           <Route path="category" element={<Category />} />
           <Route path="product/:id" element={<ProductDetail />} />
           <Route path="featured" element={<Featured />} />

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { carouselService } from '../services/carouselService';
+import { v2 as cloudinary } from 'cloudinary';
 
 class CarouselController {
     async getCarouselByType(req: Request, res: Response) {
@@ -16,15 +17,32 @@ class CarouselController {
     async uploadImageToCarousel(req: Request, res: Response) {
         try {
             const { type } = req.params;
-            const file = req.file;
-            if (!file || !file.filename) {
+            const file = req.file as Express.Multer.File | undefined;
+
+            if (!file) {
                 return res.status(400).json({ message: 'No se recibió imagen' });
             }
 
-            const result = await carouselService.uploadImage(type, file.filename);
+            // Subir la imagen directamente desde el buffer a Cloudinary
+            const result = await new Promise<any>((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    { resource_type: 'image' },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+                uploadStream.end(file.buffer);
+            });
+
+            const imageUrl = result.secure_url;
+
+            // Agregar la imagen al carrusel en la base de datos
+            const uploadResult = await carouselService.uploadImage(type, imageUrl);
+
             return res.status(200).json({
                 message: 'Imagen subida con éxito',
-                data: result,
+                data: uploadResult,
             });
         } catch (error) {
             console.error('❌ Error al subir imagen:', error);
@@ -36,11 +54,19 @@ class CarouselController {
         try {
             const { type } = req.params;
             const { imageUrl } = req.body;
+
             if (!imageUrl) {
                 return res.status(400).json({ message: 'Se requiere la URL de la imagen' });
             }
 
+            const public_id = imageUrl.split('/').pop()?.split('.')[0];
+            if (!public_id) {
+                return res.status(400).json({ message: 'URL de imagen no válida' });
+            }
+
+            await cloudinary.uploader.destroy(public_id);
             const result = await carouselService.removeImage(type, imageUrl);
+
             return res.status(200).json({
                 message: 'Imagen eliminada correctamente',
                 data: result,
@@ -55,11 +81,20 @@ class CarouselController {
         try {
             const { type } = req.params;
             const { images } = req.body;
+
             if (!Array.isArray(images)) {
                 return res.status(400).json({ message: 'Se espera un array de imágenes' });
             }
 
-            const result = await carouselService.replaceImages(type, images);
+            const uploadedImages = await Promise.all(
+                images.map(async (image: any) => {
+                    const result = await cloudinary.uploader.upload(image.path);
+                    return result.secure_url;
+                })
+            );
+
+            const result = await carouselService.replaceImages(type, uploadedImages);
+
             return res.status(200).json({
                 message: 'Carrusel actualizado correctamente',
                 data: result,
