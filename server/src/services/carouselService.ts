@@ -1,6 +1,5 @@
 import carouselModel from '../models/carouselModel';
-import fs from 'fs';
-import path from 'path';
+import cloudinary from 'cloudinary';
 
 class CarouselService {
     async getCarouselByType(type: string) {
@@ -12,32 +11,46 @@ class CarouselService {
         return carousel;
     }
 
-    async uploadImage(type: string, filename: string) {
-        const imageUrl = `/uploads/images/${filename}`;
+    async uploadImage(type: string, imagePath: string) {
+        try {
+            // Sube la imagen a Cloudinary
+            const result = await cloudinary.v2.uploader.upload(imagePath);
+            const imageUrl = result.secure_url; // La URL de la imagen en Cloudinary
 
-        const carousel = await carouselModel.findOneAndUpdate(
-            { type },
-            { $addToSet: { images: imageUrl } },
-            { upsert: true, new: true }
-        );
+            // Actualiza el carrusel con la nueva imagen
+            const carousel = await carouselModel.findOneAndUpdate(
+                { type },
+                { $addToSet: { images: imageUrl } },
+                { upsert: true, new: true }
+            );
 
-        return carousel;
+            return carousel;
+        } catch (error) {
+            console.error('❌ Error al subir la imagen a Cloudinary:', error);
+            throw new Error('Error al subir la imagen a Cloudinary');
+        }
     }
 
     async removeImage(type: string, imageUrl: string) {
-        const updatedCarousel = await carouselModel.findOneAndUpdate(
-            { type },
-            { $pull: { images: imageUrl } },
-            { new: true }
-        );
+        try {
+            // Elimina la imagen de Cloudinary
+            const publicId = imageUrl.split('/').pop()?.split('.').shift(); // Extrae el ID público de la URL
+            if (publicId) {
+                await cloudinary.v2.uploader.destroy(publicId); // Elimina la imagen de Cloudinary
+            }
 
-        // Elimina el archivo físico del servidor
-        const filePath = path.resolve('uploads/images', path.basename(imageUrl));
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
+            // Elimina la imagen de la base de datos
+            const updatedCarousel = await carouselModel.findOneAndUpdate(
+                { type },
+                { $pull: { images: imageUrl } },
+                { new: true }
+            );
+
+            return updatedCarousel;
+        } catch (error) {
+            console.error('❌ Error al eliminar la imagen de Cloudinary:', error);
+            throw new Error('Error al eliminar la imagen de Cloudinary');
         }
-
-        return updatedCarousel;
     }
 
     async replaceImages(type: string, newImages: string[]) {
@@ -52,12 +65,12 @@ class CarouselService {
             { upsert: true, new: true }
         );
 
-        // Elimina físicamente las imágenes antiguas que ya no estén
-        oldImages.forEach((img) => {
+        // Elimina físicamente las imágenes antiguas de Cloudinary
+        oldImages.forEach(async (img) => {
             if (!newImages.includes(img)) {
-                const filePath = path.resolve('uploads/images', path.basename(img));
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
+                const publicId = img.split('/').pop()?.split('.').shift();
+                if (publicId) {
+                    await cloudinary.v2.uploader.destroy(publicId); // Elimina la imagen de Cloudinary
                 }
             }
         });

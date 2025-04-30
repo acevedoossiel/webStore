@@ -143,7 +143,7 @@ const Home = () => {
           {mainCarouselImages.map((imgUrl, index) => (
             <div key={index}>
               <img
-                src={`${process.env.REACT_APP_API_URL}${imgUrl}`}
+                src={`${imgUrl}`}
                 alt={`Carrusel Main ${index + 1}`}
                 className={styles['carousel-image']}
                 onError={(e) => e.currentTarget.src = "/assets/images/default.png"}
@@ -160,7 +160,7 @@ const Home = () => {
           {secondaryCarouselImages.map((imgUrl, index) => (
             <div key={index}>
               <img
-                src={`${process.env.REACT_APP_API_URL}${imgUrl}`}
+                src={`${imgUrl}`}
                 alt={`Carrusel Secondary ${index + 1}`}
                 className={styles['carousel-image2']}
                 onError={(e) => e.currentTarget.src = "/assets/images/default.png"}
@@ -180,7 +180,7 @@ const Home = () => {
             <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
               <img
                 src={product.srcImage && product.srcImage.length > 0
-                  ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}`
+                  ? `${product.srcImage[0]}`
                   : "/assets/images/default.png"} // Usa la imagen por defecto si no hay imagen
                 alt={product.modelo}
                 className={styles['product-image']}
@@ -204,7 +204,7 @@ const Home = () => {
             <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
               <img
                 src={product.srcImage && product.srcImage.length > 0
-                  ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}`
+                  ? `${product.srcImage[0]}`
                   : "/assets/images/default.png"} // Usa imagen por defecto si no hay imagen
                 alt={product.modelo}
                 className={styles['product-image']}
@@ -229,7 +229,7 @@ const Home = () => {
               <div className={styles['imageContainer']}>
                 <img
                   src={product.srcImage && product.srcImage.length > 0
-                    ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}`
+                    ? `${product.srcImage[0]}`
                     : "/assets/images/default.png"}
                   alt={product.modelo}
                   className={styles['product-image']}

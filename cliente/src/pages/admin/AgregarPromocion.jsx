@@ -87,7 +87,7 @@ const AgregarPromocion = () => {
                         <div key={product._id} className={styles.productItem}>
                             <div className={styles.productImageContainer}>
                                 <img
-                                    src={product.srcImage.length > 0 ? `${process.env.REACT_APP_API_URL}${product.srcImage[0]}` : "/assets/images/default.png"}
+                                    src={product.srcImage.length > 0 ? `${product.srcImage[0]}` : "/assets/images/default.png"}
                                     alt={product.brand}
                                     className={styles.productImage}
                                 />

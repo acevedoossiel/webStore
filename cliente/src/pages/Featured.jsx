@@ -49,7 +49,7 @@ const Featured = () => {
                         <div key={index} className={styles.productCard}>
                             <Link to={`/product/${product._id}`}>
                                 <img
-                                    src={`${process.env.REACT_APP_API_URL}${product.srcImage[0]}`}
+                                    src={`${product.srcImage[0]}`}
                                     alt={product.modelo}
                                 />
                                 <h3>{product.brand} {product.modelo} {product.capacity}</h3>

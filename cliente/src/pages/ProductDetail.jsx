@@ -126,7 +126,7 @@ const ProductDetail = () => {
                                 product.srcImage.map((img, index) => (
                                     <SwiperSlide key={index}>
                                         <img
-                                            src={`${process.env.REACT_APP_API_URL}${img}`}
+                                            src={`${img}`}
                                             alt={`${product.modelo} ${index}`}
                                             className={styles.productImage}
                                             onClick={() => setSelectedImage(img)}
@@ -233,7 +233,7 @@ const ProductDetail = () => {
                 <div className={styles.modal}>
                     <button className={styles.closeButton} onClick={closeModal}>✖</button>
                     <div className={styles.modalContent}>
-                        <img src={`${process.env.REACT_APP_API_URL}${selectedImage}`} alt="Producto ampliado" />
+                        <img src={`${selectedImage}`} alt="Producto ampliado" />
                     </div>
                 </div>
             )}
