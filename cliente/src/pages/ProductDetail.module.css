@@ -300,3 +300,24 @@
     transform: translateY(-10px);
   }
 }
+
+@media (max-width: 380px) {
+  .productImage {
+    max-height: 300px;
+  }
+
+  .quantityContainer,
+  .flavorsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .addToCartButton {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+}

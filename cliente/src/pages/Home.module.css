@@ -60,6 +60,19 @@ body {
   justify-items: center;
 }
 
+@media (max-width: 400px) {
+  .latest-products-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 340px) {
+  .latest-products-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 /* Tarjetas de productos */
 .product-card {
