@@ -84,37 +84,28 @@ class productService {
     }
 
 
-    async addImageToProduct(productId: string, image: string) {
+    async addImageToProduct(productId: string, imageUrl: string) {
         try {
-            const result = await cloudinary.v2.uploader.upload(image);
-    
-            const imageUrl = result.secure_url;
-    
             const updatedProduct = await productModel.findByIdAndUpdate(
                 productId,
                 { $addToSet: { srcImage: imageUrl } },
                 { new: true }
             );
-    
+
             if (!updatedProduct) {
                 throw new Error("❌ Error: Producto no encontrado.");
             }
-    
-            // Solo intenta borrar si es una ruta local
-            if (image.startsWith('./') || image.startsWith('uploads/')) {
-                fs.unlinkSync(image);
-            }
-    
+
             return updatedProduct;
         } catch (error) {
-            throw new Error("❌ Error while adding image to product: ");
+            throw new Error("❌ Error while adding image to product");
         }
     }
-    
+
+
 
     async removeImageFromProduct(productId: string, imageUrl: string) {
         try {
-            // Eliminar la referencia en la base de datos
             const updatedProduct = await productModel.findByIdAndUpdate(
                 productId,
                 { $pull: { srcImage: imageUrl } },
@@ -125,17 +116,21 @@ class productService {
                 throw new Error('Product not found');
             }
 
-            // Eliminar la imagen de Cloudinary
-            const publicId = imageUrl.split('/').pop()?.split('.')[0]; // Extraer el public_id de la URL
+            const matches = imageUrl.match(/upload\/(?:v\d+\/)?(.+)\.\w+$/);
+            const publicId = matches?.[1]; // Extrae correctamente el path de carpeta
+
             if (publicId) {
                 await cloudinary.v2.uploader.destroy(publicId);
+                console.log(`✅ Imagen eliminada de Cloudinary: ${publicId}`);
             }
 
             return updatedProduct;
         } catch (error) {
-            throw new Error(`❌ Error while removing image from product`);
+            console.error('❌ Error al remover imagen del producto:', error);
+            throw new Error('Error while removing image from product');
         }
     }
+
 
     async replaceImageInProduct(productId: string, oldImageUrl: string, newImage: Express.Multer.File) {
         try {
@@ -214,17 +209,20 @@ class productService {
             }
 
             if (Array.isArray(product.srcImage)) {
-                for (const imagePath of product.srcImage) {
-                    const filePath = path.resolve('uploads/images', path.basename(imagePath));
-                    if (fs.existsSync(filePath)) {
+                for (const imageUrl of product.srcImage) {
+                    const matches = imageUrl.match(/upload\/(?:v\d+\/)?(.+)\.\w+$/);
+                    const publicId = matches?.[1];
+                    if (publicId) {
                         try {
-                            fs.unlinkSync(filePath);
-                        } catch (unlinkError) {
-                            console.warn(`⚠️ No se pudo eliminar la imagen: ${filePath}`, unlinkError);
+                            await cloudinary.v2.uploader.destroy(publicId);
+                            console.log(`✅ Imagen eliminada de Cloudinary: ${publicId}`);
+                        } catch (err) {
+                            console.warn(`⚠️ No se pudo eliminar imagen de Cloudinary: ${publicId}`, err);
                         }
                     }
                 }
             }
+
             const deletedProduct = await productModel.findByIdAndDelete(id);
 
             return deletedProduct;

@@ -17,7 +17,7 @@ const Home = () => {
   // Configuración del primer carrusel
   const settings1 = {
     dots: true,
-    infinite: true,
+    infinite: mainCarouselImages.length > 1, 
     autoplay: true,
     speed: 1000,
     autoplaySpeed: 5000,
@@ -25,17 +25,17 @@ const Home = () => {
     slidesToScroll: 1,
   };
 
-  // Configuración del segundo carrusel (con varias imágenes visibles)
+  // Configuración del segundo carrusel
   const settings2 = {
     dots: false,
-    infinite: true,
+    infinite: secondaryCarouselImages.length > 1,
     autoplay: true,
     speed: 1500,
     autoplaySpeed: 2000,
-    slidesToShow: 2.93, // Mostrar 3 imágenes al mismo tiempo
+    slidesToShow: 2.93, 
     slidesToScroll: 1,
-    centerMode: true, // Permite que las imágenes de los lados sean visibles
-    centerPadding: "10%", // Espaciado en los lados para la vista previa
+    centerMode: true, 
+    centerPadding: "10%", 
     responsive: [
       {
         breakpoint: 1024,
@@ -224,26 +224,23 @@ const Home = () => {
         </p>
         <Link to="/promotions">Ver todas las promociones</Link>
         <div className={styles['latest-products-container']}>
-          {promotionsProducts.map((product, index) => (
-            <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
-              <div className={styles['imageContainer']}>
-                <img
-                  src={product.srcImage && product.srcImage.length > 0
-                    ? `${product.srcImage[0]}`
-                    : "/assets/images/default.png"}
-                  alt={product.modelo}
-                  className={styles['product-image']}
-                  onError={(e) => e.target.src = "/assets/images/default.png"}
-                />
-                {/* 📌 Imagen de oferta especial en la esquina inferior derecha */}
-                <div className={styles['offerBadge']}>
-                  <img src="/assets/images/logos/oferta.png" alt="Oferta especial" />
-                </div>
+        {promotionsProducts.map((product, index) => (
+          <Link to={`/product/${product._id}`} className={styles['product-card']} key={index}>
+            <div className={styles['imageWrapper']}>
+              <img
+                src={product.srcImage?.[0] || "/assets/images/default.png"}
+                alt={product.modelo}
+                className={styles['product-image']}
+                onError={(e) => e.target.src = "/assets/images/default.png"}
+              />
+              <div className={styles['offerBadge']}>
+                <img src="/assets/images/logos/oferta.png" alt="Oferta especial" />
               </div>
-              <h3>{product.brand} {product.modelo} {product.capacity}</h3>
-              <p>MX ${product.price}</p>
-            </Link>
-          ))}
+            </div>
+            <h3>{product.brand} {product.modelo} {product.capacity}</h3>
+            <p>MX ${product.price}</p>
+          </Link>
+        ))}
         </div>
       </div>
     </div>

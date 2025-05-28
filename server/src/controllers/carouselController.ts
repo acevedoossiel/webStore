@@ -14,41 +14,29 @@ class CarouselController {
         }
     }
 
+
     async uploadImageToCarousel(req: Request, res: Response) {
         try {
             const { type } = req.params;
-            const file = req.file as Express.Multer.File | undefined;
+            const file = req.file as Express.Multer.File;
 
             if (!file) {
                 return res.status(400).json({ message: 'No se recibió imagen' });
             }
 
-            // Subir la imagen directamente desde el buffer a Cloudinary
-            const result = await new Promise<any>((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { resource_type: 'image' },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result);
-                    }
-                );
-                uploadStream.end(file.buffer);
-            });
-
-            const imageUrl = result.secure_url;
-
-            // Agregar la imagen al carrusel en la base de datos
-            const uploadResult = await carouselService.uploadImage(type, imageUrl);
+            const result = await carouselService.uploadImage(type, file.buffer);
 
             return res.status(200).json({
                 message: 'Imagen subida con éxito',
-                data: uploadResult,
+                data: result,
             });
         } catch (error) {
             console.error('❌ Error al subir imagen:', error);
             return res.status(500).json({ message: 'Error al subir imagen al carrusel' });
         }
     }
+
+
 
     async removeImageFromCarousel(req: Request, res: Response) {
         try {

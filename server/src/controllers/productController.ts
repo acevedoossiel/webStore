@@ -83,17 +83,19 @@ class productController {
     async addImage(req: Request, res: Response) {
         try {
             const { id } = req.params;
-
             const file = req.file as Express.Multer.File | undefined;
 
             if (!file) {
                 return res.status(400).json({ message: 'No se recibió imagen' });
             }
 
-            // Subir a Cloudinary
             const result = await new Promise<any>((resolve, reject) => {
                 const uploadStream = cloudinary.uploader.upload_stream(
-                    { resource_type: 'image' },
+                    {
+                        resource_type: 'image',
+                        folder: 'products',
+                        use_filename: true,
+                    },
                     (error, result) => {
                         if (error) reject(error);
                         else resolve(result);
@@ -107,14 +109,15 @@ class productController {
             const updatedProduct = await ProductService.addImageToProduct(id, imageUrl);
 
             return res.status(200).json({
-                message: "✅ Imagen agregada correctamente",
+                message: " Imagen agregada correctamente",
                 data: updatedProduct,
             });
         } catch (error) {
-            console.error("❌ Error al agregar la imagen:", error);
+            console.error(" Error al agregar la imagen:", error);
             return res.status(500).json({ message: "Error while adding image to product" });
         }
     }
+
 
     async removeImage(req: Request, res: Response) {
         try {

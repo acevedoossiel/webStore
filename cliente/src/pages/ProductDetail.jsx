@@ -22,6 +22,8 @@ const ProductDetail = () => {
     const [isPromoActive, setIsPromoActive] = useState(false);
     const [flavorError, setFlavorError] = useState('');
     const { addToCart } = useCart();
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -103,6 +105,12 @@ const ProductDetail = () => {
 
         console.log('Producto a agregar al carrito:', productDetails);
         addToCart(productDetails);
+        setSelectedFlavor(null);
+        setQuantity(1);
+        setFeedbackMessage('Producto agregado al carrito 🎉');
+        setTimeout(() => {
+            setFeedbackMessage('');
+        }, 3000);
     };
 
     const goBack = () => {
@@ -225,6 +233,11 @@ const ProductDetail = () => {
                         <button className={styles.addToCartButton} onClick={handleAddToCart}>
                             Agregar al carrito
                         </button>
+                        {feedbackMessage && (
+                        <div className={styles.toast}>
+                            <span>✔</span> {feedbackMessage}
+                        </div>
+                        )}
                     </div>
                 </div>
             )}

@@ -36,17 +36,19 @@ const Category = () => {
             <h1>Catálogo de productos</h1>
             <div className={styles.productList}>
                 {products && products.length > 0 ? (
-                    products.map((product, index) => (
-                        <div key={index} className={styles.productCard}>
-                            <Link to={`/product/${product._id}`}>
-                                <img
-                                    src={`${product.srcImage[0]}`}
-                                    alt={product.modelo}
+                    products.map((product, index) => (                      
+                        <Link to={`/product/${product._id}`} className={styles.productCard}>
+                            <img
+                                src={product.srcImage && product.srcImage.length > 0
+                                ? `${product.srcImage[0]}`
+                                : "/assets/images/default.png"}
+                                alt={product.modelo}
+                                className={styles['product-image']}
+                                onError={(e) => e.target.src = "/assets/images/default.png"}
                                 />
-                                <h3>{product.brand} {product.modelo} {product.capacity}</h3>
-                                <p>MX ${product.price}</p>
-                            </Link>
-                        </div>
+                            <h3>{product.brand} {product.modelo} {product.capacity}</h3>
+                            <p>MX ${product.price}</p>
+                        </Link>
                     ))
                 ) : (
                     <p>No se encontraron productos.</p>

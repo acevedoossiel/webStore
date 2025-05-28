@@ -12,6 +12,7 @@ import Category from './pages/Category';
 import ProductDetail from './pages/ProductDetail';
 import Featured from './pages/Featured';
 import Promotions from './pages/Promotions'
+import ScrollToTop from './components/utils/ScrollToTop';
 
 const AppContent = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -48,6 +49,7 @@ const AppContent = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

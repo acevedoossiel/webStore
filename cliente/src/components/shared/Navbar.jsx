@@ -86,24 +86,17 @@ function Navbar() {
         </div>
       </div>
 
-      <div className={`${styles.menu} ${isMenuOpen ? styles.open : ''}`}>
-        <ul>
-          <li>
-            <Link to="/" onClick={closeMenu}>HOME</Link>
-          </li>
-          <li>
-            <Link to="/category" onClick={closeMenu}>CATÁLOGO</Link>
-          </li>
-          <li>
-            <Link to="/featured" onClick={closeMenu}>DESTACADO 🔥</Link>
-          </li>
-          <li>
-            <Link to="/promotions" onClick={closeMenu}>PROMOCIONES</Link>
-          </li>
-          <li>
-            <h1>CONTÁCTANOS:</h1>
-          </li>
-          <li className={styles.instagramIcon}>
+     <div className={`${styles.menu} ${isMenuOpen ? styles.open : ''}`}>
+        <ul className={styles.menuList}>
+          <li><Link to="/" onClick={closeMenu}>HOME</Link></li>
+          <li><Link to="/category" onClick={closeMenu}>CATÁLOGO</Link></li>
+          <li><Link to="/featured" onClick={closeMenu}>DESTACADO 🔥</Link></li>
+          <li><Link to="/promotions" onClick={closeMenu}>PROMOCIONES</Link></li>
+        </ul>
+
+        <div className={styles.contactSection}>
+          <h1>CONTÁCTANOS:</h1>
+          <div className={styles.instagramIcon}>
             <a href={links.main} target="_blank" rel="noopener noreferrer">
               <img src="/assets/images/logos/insta.png" alt="Instagram" />
               <p className={styles.mediaText}>Principal</p>
@@ -116,18 +109,14 @@ function Navbar() {
               <img src="/assets/images/logos/whats.png" alt="WhatsApp" />
               <p className={styles.mediaText}>WhatsApp</p>
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
 
-        <button className={styles.cancelBtn} onClick={closeMenu}>
-          Cancelar
-          <img
-            src="/assets/images/logos/main-poto.png"
-            alt="Cancelar"
-            className={styles.iconLogo}
-          />
+        <button className={styles.cancelBtn} onClick={closeMenu}>Cancelar
+          <img src="/assets/images/logos/main-poto.png" alt="Cancelar" className={styles.iconLogo} />
         </button>
       </div>
+
 
       {/* Cart Sidebar */}
       <CartSidebar 

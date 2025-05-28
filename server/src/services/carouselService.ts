@@ -11,13 +11,33 @@ class CarouselService {
         return carousel;
     }
 
-    async uploadImage(type: string, imagePath: string) {
+    async uploadImage(type: string, fileBuffer: Buffer) {
         try {
-            // Sube la imagen a Cloudinary
-            const result = await cloudinary.v2.uploader.upload(imagePath);
-            const imageUrl = result.secure_url; // La URL de la imagen en Cloudinary
+            const result = await new Promise<any>((resolve, reject) => {
+                const uploadStream = cloudinary.v2.uploader.upload_stream(
+                    {
+                        resource_type: 'image',
+                        folder: `carruseles/${type}`,
+                    },
+                    (error, result) => {
+                        if (error) {
+                            console.log("❌ Error al subir a Cloudinary:", error);
+                            reject(error);
+                        } else {
+                            console.log("✅ Imagen subida a Cloudinary:", result?.secure_url);
+                            resolve(result);
+                        }
+                    }
+                );
+                uploadStream.end(fileBuffer);
+            });
 
-            // Actualiza el carrusel con la nueva imagen
+            if (!result) {
+                throw new Error("No se recibió respuesta válida de Cloudinary");
+            }
+
+            const imageUrl = result.secure_url;
+
             const carousel = await carouselModel.findOneAndUpdate(
                 { type },
                 { $addToSet: { images: imageUrl } },
@@ -26,32 +46,41 @@ class CarouselService {
 
             return carousel;
         } catch (error) {
-            console.error('❌ Error al subir la imagen a Cloudinary:', error);
-            throw new Error('Error al subir la imagen a Cloudinary');
+            console.error('❌ Error en el servicio al subir imagen:', error);
+            throw new Error('Error en el servicio al subir imagen');
         }
     }
 
+
     async removeImage(type: string, imageUrl: string) {
         try {
-            // Elimina la imagen de Cloudinary
-            const publicId = imageUrl.split('/').pop()?.split('.').shift(); // Extrae el ID público de la URL
+            // Extraer el public_id desde la URL completa
+            const matches = imageUrl.match(/upload\/(?:v\d+\/)?(.+)\.\w+$/);
+            const publicId = matches?.[1];
+
             if (publicId) {
-                await cloudinary.v2.uploader.destroy(publicId); // Elimina la imagen de Cloudinary
+                await cloudinary.v2.uploader.destroy(publicId, { invalidate: true });
+                console.log(`✅ Imagen eliminada de Cloudinary: ${publicId}`);
+            } else {
+                console.warn(`⚠️ No se pudo extraer public_id de la URL: ${imageUrl}`);
             }
 
-            // Elimina la imagen de la base de datos
+            // Eliminar la URL de la base de datos
             const updatedCarousel = await carouselModel.findOneAndUpdate(
                 { type },
                 { $pull: { images: imageUrl } },
                 { new: true }
             );
 
+            console.log(`✅ Imagen removida del carrusel en DB: ${imageUrl}`);
+
             return updatedCarousel;
         } catch (error) {
             console.error('❌ Error al eliminar la imagen de Cloudinary:', error);
-            throw new Error('Error al eliminar la imagen de Cloudinary');
+            throw new Error('Error al eliminar la imagen del carrusel');
         }
     }
+
 
     async replaceImages(type: string, newImages: string[]) {
         // Ojo: este método no elimina físicamente las imágenes antiguas
